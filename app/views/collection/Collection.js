@@ -13,14 +13,14 @@ export default class Collection extends PureComponent {
             <Container>
                 <Header {...this.props}/>
                 <Content gray>
-                    <ScrollableTabView
-                        renderTabBar={() => (<SubTabBar subTabNames={['咨询文章','场景动作']}/>)}
+                   {/* <ScrollableTabView
+                        renderTabBar={() => (<SubTabBar subTabNames={['资讯文章','场景动作']}/>)}
                         tabBarPosition='top'
                         scrollWithoutAnimation={false}
-                    >
+                    >*/}
                         <CollectionList/>
-                        <MovementList/>
-                    </ScrollableTabView>
+                       {/* <MovementList/>
+                    </ScrollableTabView>*/}
                 </Content>
             </Container>
         )

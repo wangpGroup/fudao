@@ -1,97 +1,85 @@
-//noinspection JSAnnotator
 import React, {PureComponent} from "react";
-import {Text, Button} from "native-base";
+import {Text, Button, Icon} from "native-base";
 import {View, Image, DeviceEventEmitter, TouchableHighlight} from "react-native";
 import {Actions} from "react-native-router-flux";
 import Index from "../../index/Index"
 
-/**
- * 我的情绪
- */
 export default  class MyEnter extends PureComponent {
-	constructor(props) {
-		super(props);
-	}
 
 
-	render() {
 
-		let itemStyle = Object.assign({}, styles.button, styles.mgl);
-		return (
-			<View>
-				<View style={styles.View}>
-					<Button style={itemStyle} transparent onPress={()=>{Actions.activity({title:'开会时'})}}>
-						<Image source={require('../image/kaihui.png')} style={{width:49,height:50}}/>
-					</Button>
-					<Button style={itemStyle} transparent onPress={()=>{Actions.activity({title:'在家时'})}}>
-						<Image source={require('../image/zaijia.png')} style={{width:49,height:51}}/>
-					</Button>
-				</View>
-				<View style={styles.View}>
+    render() {
+        let {themeList} = this.props
+        let flag = themeList && themeList[0]
+        return (
+            <View>
+                <View style={styles.View}>
+                    <Button style={styles.button} transparent onPress={() => {
+                        Actions.themeActivity({title: flag && themeList[0].themeName,themeId:flag && themeList[0].id})
+                    }}>
+                        {flag&& <Image source={{uri: urls.getImage(themeList[0].iconPath)}} style={styles.themeImg}/>}
+                        <Text style={styles.themeText}>{flag && themeList[0].themeName}</Text>
+                    </Button>
+                    <Button style={styles.button} transparent onPress={() => {
+                        Actions.themeActivity({title: flag && themeList[1].themeName,themeId:flag && themeList[1].id})
+                    }}>
+                        {flag && <Image source={{uri: urls.getImage(themeList[1].iconPath)}} style={styles.themeImg}/>}
+                        <Text style={styles.themeText}>{flag && themeList[1].themeName}</Text>
+                    </Button>
+                </View>
+                <View style={styles.View}>
+                    <Button style={styles.button} transparent onPress={() => {
+                        Actions.themeActivity({title: flag && themeList[2].themeName,themeId:flag && themeList[2].id})
+                    }}>
+                        {flag && <Image source={{uri: urls.getImage(themeList[2].iconPath)}} style={styles.themeImg}/>}
+                        <Text style={styles.themeText}>{flag && themeList[2].themeName}</Text>
+                    </Button>
+                    <Button style={styles.button} transparent onPress={() => {
+                        Actions.themeActivity({title: flag && themeList[3].themeName,themeId:flag && themeList[3].id})
+                    }}>
+                        {flag && <Image source={{uri: urls.getImage(themeList[3].iconPath)}} style={styles.themeImg}/>}
+                        <Text style={styles.themeText}>{flag && themeList[3].themeName}</Text>
+                    </Button>
+                    {/*<Button style={styles.button} transparent onPress={this.indexAction.bind(this)}>*/}
+                        {/*<Icon name="ios-add-circle-outline" style={{color: '#fff', fontSize: 27}}/>*/}
+                        {/*<Text style={styles.themeText}>更多场景</Text>*/}
+                    {/*</Button>*/}
+                </View>
+            </View>
 
-					<Button style={itemStyle} transparent onPress={()=>{Actions.activity({title:'通话时'})}}>
-						<Image source={require('../image/tonghua.png')} style={{width:49,height:51}}/>
-					</Button>
-					<Button style={itemStyle} transparent onPress={()=>this.props.onChangMsg(1)}>
-						<Image source={require('../image/qita.png')} style={{width:66,height:49}}/>
-					</Button>
-				</View>
-			</View>
-
-		)
-	}
+        )
+    }
 }
 
 const styles = {
-	zi:{
-		color:'#f0c728'
-	},
-	View: {
-		flexDirection: 'row',
-		marginTop: 1
-
-	},
-	button: {
-		flexDirection: 'row',
-		height: 70,
-		justifyContent: 'center',
-		flex: 1,
-		alignSelf: 'stretch',
-		backgroundColor: 'rgba(0, 0, 0, 0.3)',
-
-
-	},
-	mgl: {
-		marginLeft: 1
-	},
-	mgl10: {
-		marginLeft: 6
-	},
-	text: {
-		color: '#fff'
-	},
-	badge: {
-		backgroundColor: '#AED9E5',
-		paddingTop: 6,
-		paddingBottom: 6,
-		paddingLeft: 6,
-		paddingRight: 6,
-		borderRadius: 48,
-	},
-	image: {
-		width: 60,
-		height: 40,
-	},
-	color2: {
-		backgroundColor: '#E5B2A8',
-	},
-	color3: {
-		backgroundColor: '#D5E1AF',
-	},
-	color4: {
-		backgroundColor: '#CABBD3',
-	},
+    View: {
+        flexDirection: 'row',
+    },
+    button: {
+        flexDirection: 'column',
+        height: 65,
+        justifyContent: 'center',
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+        marginBottom: 1,
+        marginRight: 1
+    },
+    themeImg: {
+        width: 50,
+        height: 27
+    },
+    themeText: {
+        fontSize: 13,
+        color: '#fff',
+    },
+    color2: {
+        backgroundColor: '#E5B2A8',
+    },
+    color3: {
+        backgroundColor: '#D5E1AF',
+    },
+    color4: {
+        backgroundColor: '#CABBD3',
+    },
 };
-function bindAction(dispatch) {
-	return {};
-}
+

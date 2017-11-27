@@ -6,7 +6,8 @@ import {Actions, ActionConst} from "react-native-router-flux";
 import  UserInput from "./components/UserInput"
 import UserButton from "./components/UserButton";
 import TestButton from "./components/TestButton";
-import {checkPhone} from "./components/public";
+import {checkPhone,checkPwd} from "./components/public";
+import userStore from "../../mobx/userStore";
 
 const dismissKeyboard = require('dismissKeyboard');
 
@@ -27,14 +28,18 @@ export default class Register extends PureComponent {
     }
 
     verify() {
-        let phone = this.state.phone;
+        let { phone, password, confirmPassword,  } = this.state;
         if (!checkPhone(phone)) {
             tools.showToast("请填入正确的手机号");
-        } else {
+        }else if(!checkPwd(password)){
+            tools.showToast("请填入6-12由字母或数字或下划线组成的密码！");
+        } else if (confirmPassword !== password) {
+            tools.showToast("两次输入密码不一致");
+        }else{
             request.getJson(urls.apis.USER_CHECKPHONEREGISTERED, {phone: phone})
                 .then((data) => {
                     if (data.message != "用户已注册") {
-                        request.getJson(urls.apis.USER_SENDCODE, {phone: phone,})
+                        request.getJson(urls.apis.USER_SENDCODE, {phone: phone})
                             .then((data) => {
                                 if (data.ok) {
                                     this._testButton._click();
@@ -52,46 +57,39 @@ export default class Register extends PureComponent {
 
     register() {
         let {phone, password, confirmPassword, code} = this.state;
-        if (phone == "") {
-            tools.showToast("手机号不能为空");
-            return;
-        }
-        if (!checkPwd(password)) {
-            tools.showToast("请填入6-12由字母或数字或下划线组成的密码！");
-            return;
-        }
-        if (confirmPassword !== password) {
-            tools.showToast("两次输入密码不一致");
-            return;
-        }
-        dismissKeyboard();
-        request.getJson(urls.apis.USER_CHECKCODE, {phone: phone, code: code})
-            .then((data) => {
-                if (data.ok) {
-                    Actions['setPassword']({
-                        phone: phone,
-                    });
-                } else {
-                    tools.showToast("验证码错误...");
-                    this.setState({
-                        code: ''
-                    })
-                }
-            })
+            dismissKeyboard();
+            request.getJson(urls.apis.USER_CHECKCODE, {phone: phone, code: code})
+                .then((data) => {
+                    if (data.ok) {
+                        if (confirmPassword !== password) {
+                            tools.showToast("两次输入密码不一致");
+                        }else{
+                            request.getJson(urls.apis.USER_REGISTER, {phone: phone, password: password})
+                                .then((data) => {
+                                    if (data.ok) {
+                                        tools.showToast("注册成功");
+                                        this.timer = setTimeout(function () {
+                                            Actions.startInformation({
+                                                phone:phone,
+                                                password:password,
+                                            })
+                                        }, 1000);
+                                        /*this.timer = setTimeout(function () {
+                                            userStore.login(phone, password, () => {
+                                                userStore.fetchLoginUser();
+                                            });
+                                        }, 1000);*/
+                                    } else {
+                                        tools.showToast("注册失败");
+                                    }
+                                })
+                        }
 
-        request.getJson(urls.apis.USER_REGISTER, {phone: phone, password: password})
-            .then((data) => {
-                if (data.ok) {
-                    tools.showToast("注册成功");
-                    this.timer = setTimeout(function () {
-                        Actions.index({type: ActionConst.POP_AND_REPLACE,});
-                    }, 1000);
-                } else {
-                    tools.showToast("注册失败");
-                }
-            })
-
-    }
+                    } else {
+                        tools.showToast("验证码错误");
+                    }
+                })
+        }
 
     render() {
         return (
@@ -119,7 +117,7 @@ export default class Register extends PureComponent {
                         />
                         <UserInput
                             placeholder="确认密码"
-                            maxLength={18}
+                            maxLength={12}
                             iconName="ios-lock-outline"
                             secureTextEntry={true}
                             onChangeText={(value) => {
@@ -128,6 +126,7 @@ export default class Register extends PureComponent {
                         />
                         <UserInput
                             placeholder="验证码"
+                            maxLength={6}
                             iconName="ios-phone-portrait-outline"
                             keyboardType={'numeric'}
                             onChangeText={(value) => {
@@ -143,7 +142,7 @@ export default class Register extends PureComponent {
                     </View>
                     <TouchableOpacity onPress={() => Actions.userAgreement()}>
                         <Text style={styles.item}>点击注册代表您已同意</Text>
-                        <Text style={styles.item}>《福道健康使用协议和隐私条款》</Text>
+                        <Text style={styles.item}>《活·动使用协议和隐私条款》</Text>
                     </TouchableOpacity>
                 </Content>
             </Container>

@@ -91,21 +91,33 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "com.fudao"
+        applicationId "com.huodong"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
         manifestPlaceholders = [
             QQ_APPID: "1106338651",
-            WB_APPID: "xx596317672"
+            WB_APPID: "xx596317672",
+            JPUSH_APPKEY: "5e80862698801a0b87c79531",
+            APP_CHANNEL: "developer-default"
         ]
+        vectorDrawables.useSupportLibrary = true
+    }
+    signingConfigs {
+        release {
+            storeFile file(MYAPP_RELEASE_STORE_FILE)
+            storePassword MYAPP_RELEASE_STORE_PASSWORD
+            keyAlias MYAPP_RELEASE_KEY_ALIAS
+            keyPassword MYAPP_RELEASE_KEY_PASSWORD
+        }
     }
     splits {
         abi {
@@ -119,6 +131,7 @@ android {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
         }
     }
     // applicationVariants are e.g. debug, release
@@ -137,6 +150,9 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-camera')
+    compile project(':react-native-image-crop-picker')
+    compile project(':react-native-toast')
     compile project(':react-native-barcodescanner')
     compile project(':realm')
     compile project(':react-native-wechat')
@@ -145,6 +161,8 @@ dependencies {
     compile project(':react-native-video')
     compile project(':react-native-svg')
     compile project(':react-native-image-picker')
+    compile project(':jpush-react-native')
+    compile project(':jcore-react-native')
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:23.0.1"
     compile "com.facebook.react:react-native:+"  // From node_modules

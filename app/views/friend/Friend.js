@@ -1,5 +1,14 @@
 import React, {Component} from "react";
-import {ScrollView, View, ToastAndroid, TouchableWithoutFeedback, Modal, ListView, Image} from "react-native";
+import {
+    ScrollView,
+    View,
+    ToastAndroid,
+    TouchableWithoutFeedback,
+    Modal,
+    ListView,
+    Image,
+    DeviceEventEmitter
+} from "react-native";
 import {observer} from "mobx-react/native";
 import {Actions} from "react-native-router-flux";
 import {Container, Content, Header, List, PullView, Loading} from "../../components/index";
@@ -20,28 +29,48 @@ export default class Friend extends Component {
     }
 
     componentDidMount() {
+        friendStore.hasNewFriendFun();
         friendStore.fetchMyFriendList();
     }
 
     render() {
         let {visible} = this.state;
-        const {isFetching, MyFriendList} = friendStore;
+        const {isFetching, MyFriendList,hasNewFriend} = friendStore;
         return (
             <Container>
                 <Header {...this.props} right={
                     <Right>
-                        <Button transparent onPress={()=>Actions.addFriend()}><Icon name="ios-person-add" style={{color:'#000'}}/></Button>
+                        <Button transparent onPress={() => Actions.addFriend()}><Image
+                            source={require('./image/addFriend.png')} style={{width: 22, height: 20,}}/></Button>
                     </Right>
-                }/>
+                } left={<Left style={{flex: 1}}>
+                    <Button transparent onPress={this.pop}>
+                        <Icon name="ios-arrow-back"
+                              style={{fontSize: theme.toolbarIconSize, color: theme.toolbarIconColor}}/>
+                    </Button>
+                </Left>}/>
                 <Content gray delay>
 
 
                     <PullView isRefreshing={false} onRefresh={this._onRefresh.bind(this)}>
                         <List>
-                            <ListItem icon last style={{height: 55,borderBottomWidth:0}} onPress={() => Actions.newFriend()}>
+                            <ListItem icon last style={{height: 55, borderBottomWidth: 0}}
+                                      onPress={() => Actions.newFriend()}>
                                 <Left>
-                                    <View style={styles.iconView}>
-                                        <Icon name="person-add" style={styles.icon}/>
+                                    <View style={{width:43,height:46,}}>
+                                        <View style={styles.iconView}>
+                                            <Icon name="person-add" style={styles.icon}/>
+                                        </View>
+                                        {hasNewFriend?<View style={{
+                                            width: 8,
+                                            height: 8,
+                                            borderRadius: 10,
+                                            backgroundColor: 'red',
+                                            position: 'absolute',
+                                            top: 0,
+                                            right: 0
+                                        }}/>:null}
+
                                     </View>
                                 </Left>
                                 <Body>
@@ -72,6 +101,7 @@ export default class Friend extends Component {
 
 
     _onRefresh() {
+        friendStore.hasNewFriendFun();
         friendStore.fetchMyFriendList();
         ToastAndroid.show('刷新成功', ToastAndroid.SHORT);
     }
@@ -91,6 +121,11 @@ export default class Friend extends Component {
         })
     }
 
+    pop() {
+        Actions.index({page: 4})
+
+    }
+
 }
 
 const styles = {
@@ -100,7 +135,8 @@ const styles = {
         width: 40,
         height: 40,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginTop:3,
     },
     icon: {
         fontSize: 24,

@@ -11,7 +11,7 @@ export default class About extends PureComponent {
                 <Content white padder>
                     <Text style={styles.desc}>
                         &nbsp;&nbsp;&nbsp;&nbsp;
-                        福道健康环是以个人为中心的健康习惯培养APP。帮助您及时了解您的健康状态，发现和解决您的健康问题，全程记录和预估您的变化过程，配以完善的线下服务体系，为您打造基于您个人的全方位健康生态。
+                        活·动是福道健康系列产品之一，旨在培养用户动的意识，打造健康生活习惯，为用户提供适用于各种场景和问题的微运动方法，帮助用户活动各身体部位，协助解决用户的健康问题。
                     </Text>
                     <Text style={styles.bold}>关注我们</Text>
                     <Text>官方网站：www.infcn.com.cn</Text>

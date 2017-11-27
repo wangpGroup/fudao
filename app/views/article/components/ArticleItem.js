@@ -26,20 +26,23 @@ export default class ArticleItem extends Component {
 
     render() {
         let {article} = this.props;
-
+        /*return <ArticleTextItem
+            article={article}
+            onPress={this._onPress.bind(this)}
+            onLongPress={this._onLongPress.bind(this)}/>*/
         article.imgs = [];
-        if (article.img) {
+        if (article.img!="无") {
             article.imgs = article.img.split(',')
-        }
-
-        // 图片个数
-        let imgLen = article.imgs.length;
-        if (imgLen == 0) {
+        }else{
             return <ArticleTextItem
                 article={article}
                 onPress={this._onPress.bind(this)}
                 onLongPress={this._onLongPress.bind(this)}/>
-        } else if (imgLen >= 3) {
+        }
+
+        // 图片个数
+        let imgLen = article.imgs.length;
+        if (imgLen >= 3) {
             return <ArticleMultiImageItem
                 article={article}
                 onPress={this._onPress.bind(this)}

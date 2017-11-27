@@ -1,9 +1,10 @@
 import React, {Component} from "react";
 import {Text} from "native-base";
-import {View, Image, TouchableHighlight} from "react-native";
+import {View, Image, TouchableHighlight,TouchableOpacity} from "react-native";
 import DynamicImage from './DynamicImage';
 import {Actions} from "react-native-router-flux";
 import dynamicStore from "../../../mobx/dynamicStore";
+import userStore from "../../../mobx/userStore";
 
 /**
  * 动态公共部分
@@ -14,19 +15,26 @@ export default class DynamicCommon extends Component {
         if (!info.user) {
             return null;
         }
+        var arr_pic = info.path.split(',');
+        if(info.content.length>20){
+            var content = info.content.substring(0,20)+'......';
+        }else{
+            var content = info.content;
+        }
         return (
             <View style={styles.dynamicCommon}>
-                <View>
-                    <Image source={{uri: urls.getImage(info.user.photo, 700, 500)}} style={styles.dynamicTouxiang}/>
-                </View>
+                <TouchableOpacity activeOpacity={1} onPress={()=>userStore.loginUser.id!=info.user.id?Actions.friendMessage({userId: info.user.id}):null}>
+                    <Image source={{uri: urls.getImage(info.user.photo,500,500)}} style={styles.dynamicTouxiang}/>
+                </TouchableOpacity>
                 <TouchableHighlight style={styles.dynamicDetail} underlayColor='#fafafa'
                                     onPress={this._skipToDetail.bind(this)}>
                     <View>
                         <Text
-                            style={styles.dynamicName}>{info.user.nickname || "用户" + JSON.stringify(info.user.id).substr(0, 4)}</Text>
+                            style={styles.dynamicName}>{info.user.friendremark||p.user.nickname||info.user.phone || "用户" + JSON.stringify(info.user.id).substr(1, 4)}</Text>
                         <View style={styles.dynamicContain}>
-                            <Text style={styles.dynamicContent}>{info.content}</Text>
-                            <DynamicImage imagePath={info.path}/>
+                            {info.path?<Image source={{uri: urls.getImage(arr_pic[0], 600, 600)}} style={styles.msgImage}/>:null}
+                            <Text style={styles.dynamicContent}>{content}</Text>
+                            {/*<DynamicImage imagePath={info.path}/>*/}
                         </View>
                     </View>
                 </TouchableHighlight>
@@ -50,7 +58,7 @@ const styles = {
     },
     dynamicDetail: {
         flex: 1,
-        marginTop: 14,
+        marginTop: 10,
     },
     dynamicTouxiang: {
         width: 50,
@@ -66,12 +74,21 @@ const styles = {
         fontSize: theme.DefaultFontSize,
     },
     dynamicContent: {
-        marginTop: 6,
         color: '#282828',
         fontSize: theme.DefaultFontSize,
+        flex:1,
+        padding:4,
+        paddingTop:8,
     },
     dynamicContain:{
-        // padding
+        marginTop: 6,
+        padding:10,
+        // backgroundColor:'#f3f3f5',
+        flexDirection:'row'
+    },
+    msgImage:{
+        width:60,
+        height:60
     }
 };
 

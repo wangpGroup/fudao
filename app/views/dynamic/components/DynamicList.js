@@ -336,6 +336,7 @@ var DynamicListView = React.createClass({
     render() {
         return (
             <ListView
+                key={this.props.key}
                 ref="listview"
                 dataSource={this.state.dataSource}
                 renderRow={this.props.rowView}

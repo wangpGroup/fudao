@@ -1,4 +1,4 @@
-import {AsyncStorage} from "react-native";
+import {AsyncStorage,DeviceEventEmitter} from "react-native";
 import {observable, runInAction, computed, action, reaction} from "mobx";
 
 class FriendStore {
@@ -6,6 +6,7 @@ class FriendStore {
     @observable friendNickMap ={};
     @observable errorMsg = '';
     @observable NewFriendList=[];
+    @observable hasNewFriend=false;
 
 
     @action
@@ -18,7 +19,7 @@ class FriendStore {
                     this.friendNickMap[f.id] = new Date().getTime()//f.friendNick;
                 });
             } else {
-                tools.showToast('请求出错！')
+                tools.showToast("请求出错！")
             }
         });
     }
@@ -30,7 +31,35 @@ class FriendStore {
                 this.NewFriendList = result.obj;
 
             } else {
-                tools.showToast('请求出错！')
+                tools.showToast("请求出错！")
+            }
+        });
+    }
+    @action
+    hasNewFriendFun(){
+        request.getJson(urls.apis.FRIENDAPI_GETMYFRIENDAPPLYISNOTREADY)
+        .then((result) => {
+            if (result.ok) {
+                if(result.obj>0){
+                    this.hasNewFriend = true;
+                }else{
+                    this.hasNewFriend = false;
+                }
+            } else {
+                tools.showToast("请求出错！")
+            }
+        });
+    }
+    @action
+    changeMyFriendApplyToready(){
+        request.getJson(urls.apis.FRIENDAPI_CHANGEMYFRIENDAPPLYTOREADY)
+        .then((result) => {
+            if (result.ok) {
+                    this.hasNewFriend = false;
+                     DeviceEventEmitter.emit('noticeName_f');
+
+            } else {
+                tools.showToast("请求出错！")
             }
         });
     }

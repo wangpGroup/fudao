@@ -1,7 +1,9 @@
-package com.fudao;
+package com.huodong;
 
 import com.facebook.react.ReactActivity;
+import android.os.Bundle;
 import io.realm.react.RealmReactPackage;
+import cn.jpush.android.api.JPushInterface;
 
 public class MainActivity extends ReactActivity {
 
@@ -13,4 +15,23 @@ public class MainActivity extends ReactActivity {
     protected String getMainComponentName() {
         return "fudao";
     }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        JPushInterface.init(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        JPushInterface.onPause(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        JPushInterface.onResume(this);
+    }
+
+
 }

@@ -26,7 +26,7 @@ export default class Register extends PureComponent {
             request.getJson(urls.apis.USER_CHECKPHONEREGISTERED, {phone: phone})
                 .then((data) => {
                     if (data.ok) {
-                        request.getJson(urls.apis.USER_SENDCODE, {phone: phone,})
+                        request.getJson(urls.apis.USER_SENDCODE, {phone: phone})
                             .then((data) => {
                                 if (data.ok) {
                                     this._testButton._click();
@@ -44,12 +44,8 @@ export default class Register extends PureComponent {
 
     find() {
         let {phone, code} = this.state;
-        if (phone == "") {
-            tools.showToast("手机号不能为空");
-            return;
-        }
-        if (code == "") {
-            tools.showToast("验证码不能为空");
+        if (!checkPhone(phone)) {
+            tools.showToast("请填入正确的手机号");
             return;
         }
         dismissKeyboard();
@@ -59,9 +55,6 @@ export default class Register extends PureComponent {
                     Actions.getPassword2({phone: phone});
                 } else {
                     tools.showToast("验证码错误");
-                    this.setState({
-                        code: '',
-                    })
                 }
             })
     }

@@ -26,7 +26,7 @@ export default class RmarkSet extends PureComponent {
                 <Header {...this.props} right={
                     <Right>
                         <Button transparent onPress={()=>this._setOk()}>
-                            <Text>
+                            <Text style={{color:'#fff'}}>
                                 完成
                             </Text>
                         </Button>
@@ -50,22 +50,28 @@ export default class RmarkSet extends PureComponent {
     _setOk() {
         let {userId} = this.props;
         //FRIEND_UPDATEFRIENDREMARK
-        request.getJson(urls.apis.FRIEND_UPDATEFRIENDREMARK, {
-            friendId: userId,
-            friendRemark: this.state.friendRemark,
+        if(this.state.friendRemark){
+            request.getJson(urls.apis.FRIEND_UPDATEFRIENDREMARK, {
+                friendId: userId,
+                friendRemark: this.state.friendRemark,
 
-        }).then(((result) => {
-            if (result.ok) {
-                tools.showToast('修改成功',ToastAndroid.SHORT);
-                friendStore.fetchMyFriendList()
-                Actions.friend();
-            } else {
-                tools.showToast('发送申请失败，请重试',ToastAndroid.SHORT);
-            }
-        }).bind(this), (error) => {
+            }).then(((result) => {
 
-            alert(JSON.stringify(error));
-        });
+                if (result.ok) {
+                    tools.showToast("修改成功");
+                    friendStore.fetchMyFriendList()
+                    Actions.friend();
+                } else {
+                    tools.showToast("发送申请失败，请重试");
+                }
+            }).bind(this), (error) => {
+                alert(JSON.stringify(error));
+            });
+        }else{
+            friendStore.fetchMyFriendList()
+            Actions.friend();
+        }
+
 
 
     }

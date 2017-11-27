@@ -12,8 +12,8 @@ const Dynamic = {
         content: 'string',// 动态内容
         path: {type: 'string', default: ''},
         user:{type:'User'},
-        time: 'int',
-        // time: 'string',
+        // time: 'int',
+        time: 'string',
         createTime: 'int',// 发表时间,
         type: 'int',
         praises: {type: 'list', objectType: 'DynamicPraise'},
@@ -28,6 +28,8 @@ const User = {
     properties: {
         id: {type:'string',optional: true},// 用户ID
         nickname: {type:'string',optional: true},// 用户名
+        phone: {type:'string',optional: true},
+        friendremark: {type:'string',optional: true},
         photo: {type:'string',default:'/uploader/00/00/00/00/00/00/00/79.jpg'},// 头像
     }
 };
@@ -40,6 +42,8 @@ const DynamicPraise = {
     properties: {
         id: {type: 'string', optional: true},
         nickname: {type: 'string', optional: true},
+        phone: {type:'string',optional: true},
+        friendremark: {type:'string',optional: true},
         photo: {type: 'string', optional: true},
     }
 };
@@ -53,7 +57,7 @@ const DynamicComment = {
         id: {type: 'string', optional: true},
         user: {type: 'User', optional: true},
         content: 'string',
-        atUser:{type: 'User', optional: true},
+        atuser:{type: 'User', optional: true},
     }
 };
 /**
@@ -69,7 +73,7 @@ const MyQuestion = {
 
 module.exports = {
     schema: [Dynamic, DynamicPraise, DynamicComment, User],
-    schemaVersion: 2,
+    schemaVersion: 6,
     migration: () => {
     }
 };

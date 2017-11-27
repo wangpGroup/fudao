@@ -1,20 +1,35 @@
 import React, {Component} from "react";
 import {View, Image, TouchableHighlight} from "react-native";
+import Video from "react-native-video";
 
 /**
  * 上传图片
  */
 export default class NewPicture extends Component {
+    state={
+        paused:false,
+    }
+
     render() {
-        var {imgArr,addImage,delImage,imgUpload} = this.props;
+        var {imgArr,addImage,delImage,videoPath} = this.props;
+        // alert(JSON.stringify(imgArr))
         var item = imgArr.map((p, i) => {
             return (
-                <TouchableHighlight key={i} onPress={()=>delImage(i)}>
+                <TouchableHighlight key={i} onPress={()=>delImage(i)}  underlayColor='#fafafa'>
                     <Image source={p} style={styles.addPicture}/>
                 </TouchableHighlight>
             )
         });
-        return (
+
+        return videoPath?(
+            <View style={styles.pictureView}>
+                <Video source={{uri: videoPath}}
+                       style={styles.newVideo} paused={this.state.paused}
+                       rate={0} volume={1} muted={true} onLoadStart={this.loadStart.bind(this)}
+                       resizeMode="cover" repeat={true} key="video1"/>
+                <Image source={require('../assets/videoType.png')} style={styles.videoType}/>
+            </View>
+            ):(
             <View style={styles.pictureView}>
                 {item}
                 <TouchableHighlight onPress={() =>addImage()} underlayColor='#fafafa'>
@@ -22,6 +37,16 @@ export default class NewPicture extends Component {
                 </TouchableHighlight>
             </View>
         )
+    }
+
+    loadStart(){
+        let that = this;
+        setTimeout(function(){
+        that.setState({ paused: true })
+        },100)
+
+        // this.setState({ paused: true })
+
     }
     //
     // selectPhotoTapped() {
@@ -45,6 +70,19 @@ const styles = {
         height: 68,
         marginLeft: 10,
         marginBottom: 10,
+    },
+    newVideo:{
+        width: 68,
+        height: 68,
+        marginLeft: 10,
+        marginBottom: 10,
+    },
+    videoType:{
+        position:'absolute',
+        top:15,
+        left:22,
+        width:40,
+        height:40,
     }
 }
 

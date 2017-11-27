@@ -31,7 +31,7 @@ export default class UserDetail extends Component {
 				})
 
 			} else {
-				tools.showToast('发送申请失败，请重试', ToastAndroid.SHORT);
+				tools.showToast("发送申请失败，请重试");
 
 			}
 		}).bind(this), (error) => {
@@ -43,13 +43,12 @@ export default class UserDetail extends Component {
 		let {user}  = this.state;
 
 		let {userId,from} = this.props;
-
 		return (
 			<Container>
 				<Header {...this.props} left={
 					<Left>
 						<Button transparent onPress={() => from=='sao'?Actions.pop({popNum: 2}):Actions.pop()}>
-							<Icon name="arrow-back"/>
+							<Icon name="ios-arrow-back" style={{color:'#000'}}/>
 						</Button>
 					</Left>
 				}/>
@@ -68,11 +67,11 @@ export default class UserDetail extends Component {
 									&nbsp;
 									{/*{user.sex == '1' ? <Icon name="ios-man" style={styles.manIcon}/> :
 										<Icon name="ios-woman" style={styles.womanIcon}/>}*/}
-									电话：{user.phone}
+									昵称：{user.nickname}
 								</Text>
 								<Text note style={{paddingBottom: 20}}>
 									{/*{friendNickMap[user.appid] ? '昵称：' + user.title : ''}*/}
-									用户名：{user.username}
+									账号：{user.username}
 								</Text>
 								</Body>
 								<Right style={{borderBottomWidth:0}}>
@@ -80,16 +79,16 @@ export default class UserDetail extends Component {
 							</ListItem>
 						</List>
 						<Separator/>
-						<List>
-							<ListItem last onPress={() => Actions.remarkSet({userId: user.id})} style={{borderBottomWidth:0}}>
-								<Body style={{borderBottomWidth:0}}>
-								<Text>设置备注</Text>
-								</Body>
-								<Right style={{borderBottomWidth:0}}>
-									<Icon name="ios-arrow-forward"/>
-								</Right>
-							</ListItem>
-						</List>
+						{/*<List>*/}
+							{/*<ListItem last onPress={() => Actions.remarkSet({userId: user.id})} style={{borderBottomWidth:0}}>*/}
+								{/*<Body style={{borderBottomWidth:0}}>*/}
+								{/*<Text>设置备注</Text>*/}
+								{/*</Body>*/}
+								{/*<Right style={{borderBottomWidth:0}}>*/}
+									{/*<Icon name="ios-arrow-forward"/>*/}
+								{/*</Right>*/}
+							{/*</ListItem>*/}
+						{/*</List>*/}
 						<Separator/>
 						{this.renderButtons()}
 					</View> : null}
@@ -137,7 +136,7 @@ export default class UserDetail extends Component {
 					user
 				})
 			} else {
-				tools.showToast('获取用户信息失败', ToastAndroid.SHORT);
+				tools.showToast("获取用户信息失败");
 			}
 		}, (error) => {
 			dispatch(hideLoading());
@@ -178,13 +177,13 @@ export default class UserDetail extends Component {
 			friendId:user.id
 		}).then((result) => {
 			if (result.ok) {
-				tools.showToast('删除成功', ToastAndroid.SHORT);
+				tools.showToast("删除成功");
 				friendStore.fetchMyFriendList()
 				Actions.pop()
 				let {friendNickMap} = friendStore
 				delete friendNickMap[user.id]
 			} else {
-				tools.showToast('删除失败', ToastAndroid.SHORT);
+				tools.showToast("删除失败");
 
 
 			}

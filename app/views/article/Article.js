@@ -9,38 +9,15 @@ import articleStore from "../../mobx/articleStore";
 @observer
 export default class Article extends Component {
 
-    componentDidMount() {
-        articleStore.fetchArticleColumnList()
-    }
+
 
     render() {
-        const {isFetching, articleColumnList} = articleStore;
+        const {isFetching} = articleStore;
         return (
             <Container>
                 <TitleHeader {...this.props}/>
                 <Content white style={{paddingBottom: 50}}>
-                    {
-                        !isFetching &&
-                        <ScrollableTabView
-                            renderTabBar={() => (
-                                <ScrollableTabBar
-                                    activeBackgroundColor='#BEC4DA'
-                                    underlineStyle={{height:0}}
-                                />)}
-                            tabBarPosition='top'
-                            scrollWithoutAnimation={false}
-                            style={styles.tabView}
-                        >
-                            {articleColumnList.map((column) => (
-                                    <ArticleList
-                                        key={column.id}
-                                        tabLabel={column.name}
-                                        label={column.id}
-                                    />
-                                )
-                            )}
-                        </ScrollableTabView>
-                    }
+                    <ArticleList />
                     <Loading isShow={isFetching}/>
                 </Content>
             </Container>

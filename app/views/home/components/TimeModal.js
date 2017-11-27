@@ -66,9 +66,9 @@ class TimeModal extends PureComponent {
     openDetailsBox(data){
         //alert(data.substring(0,4));
         if(data=='此阶段无法修改') {
-            tools.showToast('此阶段无法修改')
+            tools.showToast("此阶段无法修改")
         }else if(data=='保存成功'){
-            tools.showToast('保存成功')
+            tools.showToast("保存成功")
         }
 
 

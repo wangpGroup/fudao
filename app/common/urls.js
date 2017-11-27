@@ -1,26 +1,33 @@
 // 接口服务器地址
-// const apiPath = 'http://103.254.113.11:9191/api/'; // 开发服务器（外网）
+//const apiPath = 'http://103.254.113.10:8081/api/'; // 开发服务器（外网）
 // const apiPath = 'http://192.168.10.69:9191/api/'; // 开发服务器（内网）
-const apiPath = 'http://103.254.113.10:9090/api/'; // 生产服务器（外网）
-// const apiPath = 'http://192.168.10.165:9090/api/'; // 生产服务器（内网）
+// const apiPath = 'http://103.254.113.10:9090/api/'; // 生产服务器（外网）
+ //const apiPath = 'http://192.168.10.165:8088/api/'; // 生产服务器（内网）
+ const apiPath = 'http://103.254.113.10:8081/api/'; // 生产服务器（内网）
 // const apiPath = 'http://fudao.infcn.com.cn/api/'; // 生产服务器（外网）
 // const apiPath = 'http://192.168.10.165:9191/api/'; // 生产服务器（内网）
+// const apiPath = 'http://192.168.10.165:8081/api/'; // 生产服务器（内网）
+
+
 
 // web服务器地址
 // const webPath = 'http://103.254.113.11:9191/web/'; // 开发服务器（外网）
 // const webPath = 'http://192.168.10.69:9191/web/'; // 开发服务器（内网）
-const webPath = 'http://103.254.113.10:9090/web/'; // 生产服务器（外网）
+//const webPath = 'http://103.254.113.10:9090/web/'; // 生产服务器（外网）//
 // const webPath = 'http://192.168.10.165:9090/web/'; // 生产服务器（内网）
 // const webPath = 'http://fudao.infcn.com.cn/web/'; // 生产服务器（外网）
 // const webPath = 'http://192.168.10.165:9191/web/'; // 生产服务器（内网）
+
 //
 // 其他
 // const webPath = 'http://192.168.3.137:3000/'; // 杨可可
-//  const webPath = 'http://192.168.3.204:3000/'; // 王朋
+ // const webPath = 'http://192.168.3.204:3000/'; // 王朋
 // const webPath = 'http://192.168.3.173:3000/'; // zy
 // const webPath = 'http://192.168.3.213:3000/'; // cxx
 // const webPath = 'http://192.168.3.184:3000/'; // cxx
-// const webPath = 'http://192.168.3.203:3000/'; //
+//const webPath = 'http://103.254.113.10:8088/web/';
+const webPath = 'http://192.168.3.204:8080/';
+//const webPath = 'http://192.168.10.165:8088/web/'
 
 
 
@@ -32,14 +39,29 @@ const urls = {
      *  页面
      */
     pages: {
+        MODIFICATIONTIME:webPath + 'modificationTime.html',
         //轮播图
         SWIPER: webPath + 'swiper.html',
         // 隐式声明
         DECLARE: webPath + 'declare.html',
         // 用户协议
         PROTOCOL: webPath + 'protocol.html',
+        // echart
+        ECHART: webPath + 'echart.html',
+        // video
+        VIDEO: webPath + 'plyr-master/demo/index.html',
         // 资讯详细
         ARTICLE_GETARTICLE: webPath + 'articleDetail.html',
+
+        // 资讯详细-分享
+        ARTICLE_GETSHAREARTICLE: webPath + 'shareArticle.html',
+        //动作库-局部动作库
+        JB_ACTIONSHARE: webPath + 'jbActionShare.html',
+        //动作库-组合动作库
+        ZH_ACTIONSHARE: webPath + 'zhActionShare.html',
+        // jbActionShare
+
+       /* http://192.168.10.165:8081/api/ArticleApi/getArticle*/
         // 我的时间
         MY_TIME: webPath + 'myTime.html',
         //修改时间
@@ -77,7 +99,69 @@ const urls = {
     apis: {
         // 图片接口(ok)
         IMAGE: apiPath + 'ImgApi/getImage',
+        IMAGENEW: apiPath + 'ImgApi/getImageNew',
+        VIDEONEW:'http://103.254.113.10:9099/videoapi/getVideo',
+        VIDEO: apiPath + 'ImgApi/getVideo',
         IMAGE_UPLOAD: apiPath + 'ImgApi/upload',
+        //获取今日推荐的活动
+        GETRECOMMENDACTIVITYLIST: apiPath +'ActivityApi/getRecommendActivityList',
+        //用户添加组合运动/局部运动等到我的定制。
+        ADDMYSUBSCRIBE:apiPath +'SubscribeApi/addMySubscribe',
+        //用户从我的订制中删除指定的订制信息
+        DELETEMYSUBSCRIBE:apiPath +'SubscribeApi/deleteMySubscribe',
+        //用户从活动中删除指定的订制。
+        DELETEMYSUBSCRIBEBYSOURCEID:apiPath +'SubscribeApi/deleteMySubscribeBySourceId',
+
+        //获取当前活动所有信息
+        GETONEACTTIVITY:apiPath +'ActivityApi/getOneActtivity',
+        //获取当前活动"组"所有信息
+        GETONEACTTIVITYGROUP:apiPath +'ActivityApi/getOneActtivityGroup',
+
+        //通过主题ID 获取主题下的所有活动。
+        GETTHEMEACTIVITYLIST:apiPath +'ActivityApi/getThemeActivityList',
+        //通过分组名称 获取所有组合动作。
+        GETSEARCHACTIVITYGROUP:apiPath +'ActivityApi/getSearchActivityGroup',
+        //通过活动名称 获取所有组合动作。
+        GETSEARCHACTIVITYLIST:apiPath +'ActivityApi/getSearchActivityList',
+        //获取个人订阅的活动。
+        GETSUBSCRIBEACTIVITYLIST: apiPath +'ActivityApi/getSubscribeActivityList',
+
+
+
+
+
+
+        //获取用户当天分数。
+        ACTIVITY_GETTHISDATESCORE: apiPath + 'ActivityApi/getThisDateScore',
+        //获取当前用户一周所得总共分数（周活力值）
+        ACTIVITY_GETTHISWEEKTOTALSCORE: apiPath + 'ActivityApi/getThisWeekTotallScore',
+        //获取当前用户一周所得分数（周计划活力值：周一到周日）
+        ACTIVITY_GETTHISWEEKSCORES: apiPath + 'ActivityApi/getThisWeekScores',
+        //获取用户活动排行，按分值排序。
+        ACTIVITY_GETUSERSCORELIST: apiPath + 'ActivityApi/getUserScoreList',
+        //获取今日推荐的活动
+        ACTIVITY_GETRECOMMENDACTIVITYLIST:apiPath + 'ActivityApi/getRecommendActivityList',
+        //获取今日推荐的活动
+        ACTIVITY_GETTHEMEACTIVITYLIST:apiPath + 'ActivityApi/getThemeActivityList',
+        //获取今日组数
+        ACTIVITY_GETACRTALLFORTHISDAY:apiPath + 'ActivityApi/getActTallForThisDay',
+        //获取单个活动详情
+        ACTIVITY_GETONEACTTIVITY:apiPath + 'ActivityApi/getOneActtivity',
+        //主题场景类型类型获取主题列表数据。
+        THEME_GETTHEMELIST:apiPath +'ThemeApi/getThemeList',
+        //
+        THEME_GETEVERYDAYRECOMMEND:apiPath + 'ThemeApi/getEveryDayRecommend',
+        //用户运动完成后添加分数
+        ACTIVITY_ADDACTSCORE: apiPath + 'ActivityApi/addActScore',
+        //标语修改（占山诳语）。
+        USER_CHANGESLOGAN :apiPath + 'UserApi/changeSlogan',
+        //给当前好友点赞或者取消点赞
+        ACTIVITY_ADDORREMOVEPRAISE :apiPath + 'ActivityApi/addOrRemovePraise',
+        //活动付款。
+        ACTIVITY_PAYTHEME:apiPath+'ActivityApi/payActivity',
+        //主题场景付款。
+        THEME_PAYTHEME: apiPath+'ThemeApi/payTheme',
+
 
 
         //天气-------------------------------------------------------------------------
@@ -88,17 +172,25 @@ const urls = {
 
         //资讯列表
         //资讯列表(ok)
-        ARTICLE_GETARTICLELIST: apiPath + 'ArticleApi/getArticleList',
-        //获取资讯栏目列表
-        ARTICLE_GETARTICLECOLUMNLIST: apiPath + 'ArticleApi/getArticleColumnList',
+        ARTICLEAPI_GETARTICLELIST: apiPath + 'ArticleApi/getArticleList',
+
+        ARTICLE_GETSHAREARTICLE: apiPath + 'ImgApi/getShareArticle',
 
 
         // 我的收藏 ----------------------------------------------------------------------
 
         //获取我的收藏列表
-        COLLECTION_GETMYCOLLECTIONLIST: apiPath + 'CollectionApi/getMyCollectionList',
+        COLLECTIONAPI_GETMYCOLLECTIONLIST: apiPath + 'CollectionApi/getMyCollectionList',
         //删除(取消)我的收藏
-        COLLECTION_DELETEMYCOLLECTION: apiPath + 'CollectionApi/deleteMyCollection',
+        COLLECTIONAPI_DELETEMYCOLLECTION: apiPath + 'CollectionApi/deleteMyCollection',
+        COLLECTIONAPI_DELETEMYCOLLECTIONBYSOURCEID: apiPath + 'CollectionApi/deleteMyCollectionBySourceId',
+        //添加我的收藏
+        COLLECTIONAPI_ADDMYCOLLECTION: apiPath + 'CollectionApi/addMyCollection',
+
+
+        //获取活动主题列表
+        THEMEAPI_GETTHEMELIST: apiPath + 'ThemeApi/getThemeList',
+
 
 
         //获取用户信息
@@ -124,6 +216,11 @@ const urls = {
         FRIEND_GETMYFRIENDLIST: apiPath + 'FriendApi/getMyFriendList',
         //修改好友备注
         FRIEND_UPDATEFRIENDREMARK: apiPath + 'FriendApi/updateFriendRemark',
+        //获取好友信息
+        FRIEND_GETFRIEND: apiPath + 'UserApi/getFriend',
+        //
+        FRIENDAPI_GETMYFRIENDAPPLYISNOTREADY:apiPath+'FriendApi/getMyFriendApplyIsNotready',
+        FRIENDAPI_CHANGEMYFRIENDAPPLYTOREADY:apiPath+'FriendApi/changeMyFriendApplyToready',
 
 
         //搜索------------------------------------------------------------------------
@@ -145,6 +242,8 @@ const urls = {
 		USER_REGISTER: apiPath + "UserApi/register",
 		//登录
 		USER_LOGIN: apiPath + "UserApi/login",
+        //绑定手机
+        USER_SETUSERPHONE: apiPath + "UserApi/setUserPhone",
 		//获取用户信息
 		USER_GETLOGINUSER: apiPath + 'UserApi/getLoginUser',
 		//获取指定用户信息
@@ -153,9 +252,8 @@ const urls = {
 		USER_RESETPASSWORD: apiPath + "UserApi/resetPassword",
 		//基本信息
 		USER_SETUSERBASEINFO: apiPath + "UserApi/setUserBaseInfo",
-		//情绪
-		EMOTION_GETEMOTIONFACTOR: apiPath + "EmotionApi/getEmotionFactor",
-		EMOTION_GETEMOTIONINTERVENE: apiPath + "EmotionApi/getEmotionIntervene",
+
+		USER_OTHERPORTYLOGIN: apiPath + "UserApi/otherPortyLogin",
 
 		// 注册登录(新)
 
@@ -191,96 +289,27 @@ const urls = {
         DYNAMIC_ADDDYNAMICPRAISE: apiPath + 'DynamicApi/addDynamicPraise',
         //取消点赞
         DYNAMIC_DELETEDYNAMICPRAISE: apiPath + 'DynamicApi/deleteDynamicPraise',
-
-        // 我的问题 ---------------------------------------------------------
-        //所有问题
-        DISEASE_GETALLDISEASELIST: apiPath + 'DiseaseApi/getAllDiseaseList',
-        //用户问题
-        DISEASE_GETMYDISEASELIST: apiPath + 'DiseaseApi/getMyDiseaseList',
-        //添加我的问题
-        DISEASE_ADDMYDISEASE: apiPath + 'DiseaseApi/addMyDisease',
-        //删除用户问题
-        DISEASE_DELETEMYDISEASE: apiPath + 'DiseaseApi/deleteMyDisease',
-        //问题日常疗法
-        DISEASE_GETDISEASEDAILYMETHODLIST: apiPath + 'DiseaseApi/getDiseaseDailyMethodList',
-        DISEASE_GETDISEASEDAILYMETHODDETAIL: apiPath + 'DiseaseApi/getDiseaseDailyMethodDetail',
-        //问题专业疗法
-        DISEASE_GETDISEASEPROFESSIONALMETHODLIST: apiPath + 'DiseaseApi/getDiseaseProfessionalMethodList',
-        DISEASE_GETDISEASEPROFESSIONALMETHODDETAIL: apiPath + 'DiseaseApi/getDiseaseProfessionalMethodDetail',
-        //获取食材
-        INGREDIENT_GETINGREDIENT: apiPath + 'IngredientApi/getIngredient',
-        //获取菜品列表
-        COOKBOOK_GETCOOKBOOKLIST: apiPath + 'CookbookApi/getCookbookList',
-        //获取菜品详细
-        COOKBOOK_GETCOOKBOOK: apiPath + 'CookbookApi/getCookbook',
-       //获取疾病相关经络
-        DISEASE_MERIDIANS: apiPath + 'DiseaseApi/getDiseaseMeridians',
-        //获取疾病相关穴位
-        DISEASE_ACUPOINTS: apiPath + 'DiseaseApi/getDiseaseAcupoints',
-        //获取疾病相关器官
-        DISEASE_ORGANS: apiPath + 'DiseaseApi/getDiseaseOrgans',
-        //获取疾病相关循环系统
-        DISEASE_CIRCULATORYSYSTEMS: apiPath + 'DiseaseApi/getDiseaseCirculatorySystems',
-        //获取自修相关经络
-        EXPECT_MERIDIANS: apiPath + 'ExpectApi/getExpectMeridians',
-        //获取自修相关穴位
-        EXPECT_ACUPOINTS: apiPath + 'ExpectApi/getExpectAcupoints',
-        //获取自修相关器官
-        EXPECT_ORGANS: apiPath + 'ExpectApi/getExpectOrgans',
-        //获取自修相关循环系统
-        EXPECT_CIRCULATORYSYSTEMS: apiPath + 'ExpectApi/getExpectCirculatorySystems',
-
-
-        // 我的期望 ---------------------------------------------------------
-        //所有期望
-        EXPECT_GETALLEXPECTLIST: apiPath + 'ExpectApi/getAllExpectList',
-        //用户期望
-        EXPECT_GETMYEXPECTLIST: apiPath + 'ExpectApi/getMyExpectList',
-        //添加用户期望
-        EXPECT_ADDMYEXPECT: apiPath + 'ExpectApi/addMyExpect',
-        //删除用户期望
-        EXPECT_DELETEMYEXPECT: apiPath + 'ExpectApi/deleteMyExpect',
-        //期望日常疗法
-        EXPECT_GETEXPECTDAILYMETHODLIST: apiPath + 'ExpectApi/getExpectDailyMethodList',
-        EXPECT_GETEXPECTDAILYMETHODDETAIL: apiPath + 'ExpectApi/getExpectDailyMethodDetail',
-
-        //期望专业疗法
-        EXPECT_GETEXPECTPROFESSIONALMETHODLIST: apiPath + 'ExpectApi/getExpectProfessionalMethodList',
-        EXPECT_GETEXPECTPROFESSIONALMETHODDETAIL: apiPath + 'ExpectApi/getExpectProfessionalMethodDetail',
-
-        // 自养 ---------------------------------------------------------
-       HEALTH_GETSOLARTERM: apiPath + 'HealthApi/getSolarTerm',
-       HEALTH_GETHEALTHDAILYMETHODLIST: apiPath + 'HealthApi/getHealthDailyMethodList',
-       HEALTH_GETHEALTHDAILYMETHODDETAIL: apiPath + 'HealthApi/getHealthDailyMethodDetail',
+        //获取资讯详情
+        IMGAPI_GETSHAREARTICLE:apiPath +'ImgApi/getShareArticle',
 
         // 我的能量场 ---------------------------------------------------------
 
-        ENERGY_GETINFORMATIONRESULT: apiPath + '/EnergyApi/getInformationResult',//
-        MY_ENEGRYMY_ACTION_INFORMATION: apiPath + 'app/myEnergyAction!informationData.action',//?appid=1
         //获取区县
         REGION_GETCOUNTYLIST: apiPath + 'RegionApi/getCountyList',
         //获取城市列表
         REGION_GETCITYLIST: apiPath + 'RegionApi/getCityList',
 
-        //获取体检结果
-        MEDICALEXAMINATION_GETMEDICALINFORMATIONLIST: apiPath + 'MedicalExaminationApi/getMedicalInformationList',
-        //修改体检结果
-        MEDICALEXAMINATION_UPDATAMEDICALINFORMATIONRESULT: apiPath + 'MedicalExaminationApi/updataMedicalInformationResult',
-
-        // 自诊 ---------------------------------------------------------
-        DIAGNOSIS_GETCOMMONDISEASELIST: apiPath + 'DiagnosisApi/getCommonDiseaseList',
-        DIAGNOSIS_ADDMYDISEASES: apiPath + 'DiagnosisApi/addMyDiseases',
-        DIAGNOSIS_GETQUESTIONNAIRESCORES :apiPath + 'DiagnosisApi/getQuestionnaireScores',
         // 意见反馈 ---------------------------------------------------------
         FEEDBACK_SUBMIT: apiPath + 'FeedbackApi/submit',
         //我的记录
         TIMEPERIODAPI_GETMYRECORD:apiPath+'TimePeriodApi/getMyRecord',
 
+        ACTIVITYAPI_GETTHISWEEKTOTALLSCORE:apiPath+'ActivityApi/getThisWeekTotallScore',
 
     },
     // 获取图片完整路径
     getImage(filePath, width, height){
-        let url = this.apis.IMAGE + '?filePath=' + filePath;
+        let url = this.apis.IMAGENEW + '?filePath=' + filePath;
         if (width)
             url += '&w=' + width;
         if (height)

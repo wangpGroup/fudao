@@ -1,38 +1,37 @@
-/**
- * Created by zhang on 2016/8/19.
- */
-'use strict';
-
 import React, {Component} from 'react';
 
 import {StyleSheet, View, TouchableOpacity, Text} from 'react-native';
 
-class SubTabBar extends Component {
+export default class SubTabBar extends Component {
 
-    constructor(props) {
-        super(props);
+    constructor(){
+        super()
         this.state = {
-            disabled: false
+            activeTab: new Date().getDay() -1
         }
+    }
+    onPress(i){
+        this.setState({
+            activeTab: i
+        })
+        this.props.onPress(i)
     }
 
     renderTabOption(tab, i) {
-        // let color = this.props.activeTab == i ? "#000" : "#000"; // 判断i是否是当前选中的tab，设置不同的颜色
-        let backgroundColor = this.props.activeTab == i ? "#fff" : theme.contentBgColor; // 判断i是否是当前选中的tab，设置不同的颜色
-        // let fontSize = this.props.activeTab == i ? 15 : 13; // 判断i是否是当前选中的tab，设置不同的颜色
+        let backgroundColor = this.state.activeTab == i ? "#fff" : theme.contentBgColor;
         let date = new Date();
         let nowDate = date.getDay() === 0 ? 6 : date.getDay() - 1;
         return (
             <TouchableOpacity
                 key={i}
-                onPress={() => this.props.goToPage(i)}
+                onPress={this.onPress.bind(this,i)}
                 style={styles.tab}
                 activeOpacity={1}
                 disabled={i <= nowDate ? false : true}
             >
                 <View style={[styles.item,{backgroundColor: backgroundColor,}]}>
-                    <Text style={{color: i <= nowDate ? '#666' : '#999', fontSize: 13}}>
-                        {this.props.subTabNames[i]}
+                    <Text style={{color: i <= nowDate ? '#333' : '#999', fontSize: 13}}>
+                        {tab}
                     </Text>
                 </View>
             </TouchableOpacity>
@@ -42,16 +41,17 @@ class SubTabBar extends Component {
     render() {
         return (
             <View style={styles.tabs}>
-                {this.props.tabs.map((tab, i) => this.renderTabOption(tab, i))}
+                {this.props.subTabNames.map((tab, i) => this.renderTabOption(tab, i))}
             </View>
         );
     }
 }
 
-const styles = StyleSheet.create({
+const styles = {
     tabs: {
         flexDirection: 'row',
         alignItems: 'center',
+        backgroundColor: theme.contentBgColor
     },
 
     tab: {
@@ -67,7 +67,4 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     }
-});
-
-
-export default SubTabBar;
+}

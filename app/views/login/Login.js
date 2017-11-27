@@ -5,7 +5,7 @@ import {Actions} from "react-native-router-flux";
 import UserButton from "./components/UserButton";
 import UserInput from "./components/UserInput";
 import {checkPhone,checkPwd} from "./components/public";
-import UserStore from "../../mobx/userStore";
+import userStore from "../../mobx/userStore";
 
 const dismissKeyboard = require('dismissKeyboard');
 
@@ -18,7 +18,20 @@ export default class Login extends PureComponent {
             password: '',
         }
     }
+  /*  componentWillMount() {
+        /!*alert(userStore.isLogin +'////'+ userStore.loginUser.sex)
+         if (userStore.isLogin && userStore.loginUser.sex) {
+         Actions.index({type: ActionConst.RESET});
+         }*!/
 
+        if (userStore.isLogin) {
+            if(userStore.loginUser.sex){
+                Actions.index({
+                    type: ActionConst.REPLACE
+                });
+            }
+        }
+    }*/
     login() {
         let {phone, password} = this.state;
         if (!checkPhone(phone)) {
@@ -30,12 +43,13 @@ export default class Login extends PureComponent {
             return;
         }
         dismissKeyboard();
-        UserStore.login(phone, password, () => {
-            UserStore.fetchLoginUser();
+        userStore.login(phone, password, () => {
+            userStore.fetchLoginUser();
         });
     }
 
     render() {
+
         return (
             <Container>
                 <Header {...this.props}/>

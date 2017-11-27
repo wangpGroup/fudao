@@ -1,10 +1,11 @@
 import React, {Component} from "react";
-import {View, Image, TouchableOpacity, TouchableHighlight, DatePickerAndroid, Alert, Platform} from "react-native";
+import {View, Image, TouchableOpacity, Platform,Alert,TextInput} from "react-native";
 import {Thumbnail, Text, Icon} from "native-base";
 import {Header, Container, Content} from "../../components";
 import {Actions, ActionConst} from "react-native-router-flux";
 import {observer} from "mobx-react/native";
 import UserButton from "./components/UserButton";
+import WomanChoose from "./components/WomanChoose";
 import UserStore from "../../mobx/userStore";
 import DatePicker from 'react-native-datepicker';
 
@@ -18,12 +19,14 @@ export default class StartInformation extends Component {
         this.state = {
             date: '',
             sex: null,
-            phone: this.props.phone,
+            nickname: '',
+            jieduan: ''
+
         }
     }
 
     componentWillMount() {
-        Geolocation.getCurrentPosition(
+       Geolocation.getCurrentPosition(
             location => {
                 var result = "速度：" + location.coords.speed +
                     "\n经度：" + location.coords.longitude +
@@ -66,45 +69,64 @@ export default class StartInformation extends Component {
         this.setState({
             sex: sex
         })
+        if(sex == 2) {
+            this._modal.show();
+        }
     }
-    alert() {
-        Alert.alert(
-            '悄悄告诉你:',
-            "基本信息保存后不可修改哦，确认提交吗？",
-            [
-                {text: '取消', onPress: () => null},
-                {text: '提交', onPress: () => this.commit()},
-            ]
-        )
-    }
-    commit() {
-        let {sex, date, phone} = this.state;
+
+    tishi(){
+        let {sex,nickname} = this.state;
         if (sex === null) {
             tools.showToast("请点击选择您的性别")
+            return;
+        }
+        if (nickname === '') {
+            tools.showToast("请输入您的昵称")
             return;
         }
         if (UserStore.position.regionId == '') {
             tools.showToast("请点击选择您的位置")
             return;
         }
+        Alert.alert(
+            '悄悄告诉你:',
+            "性别保存后不可修改哦，确认提交吗？",
+            [
+                {text: '取消', onPress: () => null},
+                {text: '提交', onPress: () => this.commit()},
+            ]
+        )
+    }
 
-        request.getJson(urls.apis.USER_SETUSERBASEINFO, {
+    commit() {
+        let {sex, date,nickname,jieduan} = this.state;
+
+        let {phone, password} = this.props
+
+
+        request.postJson(urls.apis.USER_SETUSERBASEINFO, {
             phone: phone,
+            nickname: nickname,
             sex: sex,
-            birthday: date,
+            crowd: jieduan,
+            birthday: date ,
             regionId: UserStore.position.regionId
+        }).then((res) => {
+            if (res.ok) {
+                UserStore.login(phone, password, () => {
+                    UserStore.fetchLoginUser();
+                });
+            }
         })
-            .then((data) => {
-                if (data.ok) {
-                    UserStore.login(phone, password, () => {
-                        UserStore.fetchLoginUser();
-                    });
-                }
-            })
-
+    }
+    _jieduan(text){
+        this.setState({
+            jieduan:text
+        })
     }
     render() {
         let position = UserStore.position.name;
+        let date1 = tools.dateFormat(new Date(), 'yyyy-MM-dd')
         return (
             <Container style={styles.container}>
                 <Header {...this.props}/>
@@ -120,55 +142,85 @@ export default class StartInformation extends Component {
                         </TouchableOpacity>
                         <TouchableOpacity
                             activeOpacity={1}
-                            onPress={this.changeSex.bind(this, 0)}
+                            onPress={this.changeSex.bind(this, 2)}
                         >
-                            {this.state.sex === 0 ? <Thumbnail large source={require('./assets/w.png')}/> :
+                            {this.state.sex === 2 ? <Thumbnail large source={require('./assets/w.png')}/> :
                                 <Thumbnail large source={require('./assets/w-h.png')}/>
                             }
+
+                            <Text style={{textAlign:'center',marginTop:5}}>{this.state.jieduan}</Text>
+
                         </TouchableOpacity>
                     </View>
-                    <View style={{marginTop: 40}}>
-                        <Text style={styles.dateText}>请选择您的生日</Text>
-                        <View style={styles.dateBox}>
-                            <DatePicker
-                                style={{width: 200}}
-                                date={this.state.date}
-                                showIcon={false}
-                                mode="date"
-                                placeholder={this.state.date}
-                                format="YYYY-MM-DD"
-                                confirmBtnText="确定"
-                                cancelBtnText="取消"
-                                customStyles={{dateInput:styles.datePicker,dateText:styles.pickerText,placeholderText:{color:"#999999"}}}
-                                onDateChange={(date) => {this.setState({date: date})}}
-                            />
-                        </View>
+                    <View style={{marginTop: 20}}>
+                        {/*<Text style={styles.dateText}>请选择您的生日</Text>*/}
                     </View>
+                    <View style={styles.row}>
+                        <Text>昵称</Text>
+                        <TextInput
+                            style={{flex: 1, textAlign: 'right'}}
+                            underlineColorAndroid='transparent'
+                            placeholder={'请输入您的昵称'}
+                            onChangeText={(value) => {
+                                this.setState({nickname: value})
+                            }}
+                        />
+                    </View>
+                    <View style={styles.row}>
+                        <Text>生日</Text>
+                        <DatePicker
+                            style={{width: 100}}
+                            date={this.state.date}
+                            showIcon={false}
+                            mode="date"
+                            maxDate={date1}
+                            placeholder={this.state.date}
+                            format="YYYY-MM-DD"
+                            confirmBtnText="确定"
+                            cancelBtnText="取消"
+                            customStyles={{
+                                dateInput: styles.datePicker,
+                                dateText: styles.pickerText,
+                                placeholderText: {color: "#999999"}
+                            }}
+                            onDateChange={(date) => {
+                                this.setState({date: date})
+                            }}
+                        />
+                    </View>
+
                     <TouchableOpacity
                         style={styles.position}
                         onPress={() => Actions.cityPick()}>
                         <Icon name='navigate'/>
                         <Text style={styles.positionText}>{position}</Text>
                     </TouchableOpacity>
-                    <UserButton text="提交" onPress={this.alert.bind(this)}/>
+                    <UserButton text="提交" onPress={this.tishi.bind(this)}/>
+                    <WomanChoose ref={(e)=>this._modal = e}  onPress={this._jieduan.bind(this)}/>
                 </Content>
             </Container>
         )
     };
 }
 const styles = {
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        height: 60,
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee'
+    },
     photo: {
-        marginTop: 40,
-        height: 100,
+        marginTop: 30,
         flexDirection: 'row',
         justifyContent: 'space-around',
     },
     datePicker: {
-        justifyContent: 'center',
         borderWidth: 0,
     },
     pickerText: {
-        fontSize:theme.DefaultFontSize+2,
+        fontSize: theme.DefaultFontSize + 2,
     },
     dateText: {
         textAlign: 'center',
@@ -184,7 +236,7 @@ const styles = {
         marginTop: 30,
     },
     position: {
-        marginTop: 80,
+        marginTop: 50,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
@@ -193,7 +245,6 @@ const styles = {
         marginLeft: 10,
         fontSize: theme.DefaultFontSize - 3,
     },
-
 };
 
 

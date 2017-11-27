@@ -17,7 +17,7 @@ export default Object.assign(material, {
     toolbarIconColor: "#000",
     toolbarTextColor: "#000",
     //TabBar
-    navTabBarHeight: 60,
+    navTabBarHeight: 55,
     navTabBarBgColor: '#30173E',
     navTabBarTextColor: '#fff',
     navTabBarActiveTextColor: '#9FCC2D',

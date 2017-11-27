@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {observer} from "mobx-react/native";
-import {Right, Button, Left, Text} from "native-base";
+import {Right, Button, Left, Text,Body,Title} from "native-base";
 import {Image, View, DeviceEventEmitter, TextInput, TouchableHighlight, TouchableOpacity, Alert} from 'react-native'
 import ImagePicker from 'react-native-image-picker';
 import {Container, Header, Content} from "../../components/index";
@@ -26,14 +26,14 @@ export default class NewDynamic extends Component {
         return (
             <Container>
                 <Header  {...this.props} right={
-                    <Right>
-                        <Button transparent onPress={this.send.bind(this)}><Text>{right}</Text></Button>
+                    <Right style={{flex:1}}>
+                        <Button transparent onPress={this.send.bind(this)}><Text style={{color:'#000'}}>{right}</Text></Button>
                     </Right>
                 } left={
-                    <Left>
-                        <Button transparent onPress={()=>Actions.pop()}><Text>取消</Text></Button>
+                    <Left  style={{flex:1}}>
+                        <Button transparent onPress={()=>Actions.pop()}><Text style={{color:'#000'}}>取消</Text></Button>
                     </Left>
-                }/>
+                } />
                 <Content white>
                     <Editor
                         placeholder="说点什么吧..."
@@ -73,7 +73,6 @@ export default class NewDynamic extends Component {
     }
 
     delImage(i){
-        // alert(JSON.stringify(list)+"**************"+JSON.stringify(upload))
         Alert.alert('', '确定删除图片吗?', [
             {text: '取消'},
             {
@@ -87,6 +86,7 @@ export default class NewDynamic extends Component {
         let {text} =this.state;
         // if (this.state.text||dynamicStore.renderPicture.length!=0) {
         if (text || dynamicStore.imgList.length > 0) {
+
             dynamicStore.addNewDynamic(text)
         } else {
             Alert.alert('', '内容不能为空~~', [{text: '确定'}])

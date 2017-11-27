@@ -4,6 +4,7 @@ import {Grid, Item, Text, Row, Col, Thumbnail} from "native-base";
 export default class ArticleMultiImageItem extends Component {
 
     render() {
+
         let {article, onPress, onLongPress} = this.props;
         return (
             <Item style={styles.item}
@@ -26,7 +27,6 @@ export default class ArticleMultiImageItem extends Component {
                     </Row>
                     <Row>
                         <Text style={styles.from}>来自：{article.source}</Text>
-                        <Text style={styles.timeDiff}>{tools.dateFormat(new Date(article.createTime), 'yyyy-MM-dd')}</Text>
                     </Row>
                 </Grid>
             </Item>

@@ -11,7 +11,7 @@ import Modal from "./Modal";
 import WebView from "./WebView";
 import TitleHeader from "./header/TitleHeader";
 import GiftedListView from "./GiftedListView";
-
+import TitleHeaderDZK from "./header/TitleHeaderDZK";
 export {
     Container,
     Content,
@@ -25,5 +25,6 @@ export {
     Modal,
     WebView,
     TitleHeader,
-    GiftedListView
+    GiftedListView,
+    TitleHeaderDZK
 }

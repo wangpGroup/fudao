@@ -12,8 +12,13 @@ class CircleProgress extends PureComponent {
 
     render() {
         const {radius, baseColor, baseWidth, progressColor, progressWidth, progress, strokeLinecap, totalNum} = this.props
-        let endX, endY,
+        let endX, endY,degress
+        if(progress != totalNum){
             degress = progress / totalNum * 360;
+        }else{
+            degress = (progress-0.1)/ totalNum * 360;
+        }
+
         const size = radius * 2,
             startX = radius,
             startY = progressWidth / 2,
@@ -39,8 +44,7 @@ class CircleProgress extends PureComponent {
             degress = degress * 2 * Math.PI / 360;
             endX = startX - origin * Math.cos(degress);
             endY = startY - origin - origin * Math.sin(degress);
-        }
-        ;
+        };
 
         const pushStr = "M{0},{1} A{2},{3} 0 {4},1 {5},{6}",
             result = pushStr.format(startX, startY, origin, origin, largeFlag, endX, endY);
@@ -49,9 +53,9 @@ class CircleProgress extends PureComponent {
             <View>
                 <Svg width={size} height={size}>
                     <Defs>
-                        <LinearGradient id="grad" x1="0" y1="0" x2="100%" y2="100%">
-                            <Stop offset="0" stopColor="yellow" stopOpacity="0.5"/>
-                            <Stop offset="1" stopColor="red" stopOpacity="1"/>
+                        <LinearGradient id="grad" x1="0" y1="100%" x2="100%" y2="0">
+                            <Stop offset="0" stopColor="#2639a6" stopOpacity="0.5"/>
+                            <Stop offset="1" stopColor="#cf0463" stopOpacity="1"/>
                         </LinearGradient>
                     </Defs>
                     <Circle
@@ -82,9 +86,9 @@ class CircleProgress extends PureComponent {
     };
 }
 CircleProgress.defaultProps = {
-    radius: 95,
+    radius: 85,
     baseColor: '#f7f7f7',
-    baseWidth: 8,
+    baseWidth: 6,
     progressWidth: 10,
     progress: 0,
     totalNum: 360,

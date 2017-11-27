@@ -18,9 +18,8 @@ export default class ArticleSingleImageItem extends Component {
                     <Row>
                         <Col>
                             <Text style={styles.title}>{article.title}</Text>
-                            <Row style={{marginTop: 10}}>
+                            <Row style={{marginTop: 15}}>
                                 <Text style={styles.from}>来自：{article.source}</Text>
-                                <Text style={styles.timeDiff}>{tools.dateFormat(new Date(article.createTime), 'yyyy-MM-dd')}</Text>
                             </Row>
                         </Col>
 

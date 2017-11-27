@@ -5,6 +5,7 @@ import {Actions,ActionConst} from "react-native-router-flux";
 import  UserInput from "./components/UserInput"
 import  UserButton from "./components/UserButton";
 import {checkPwd} from "./components/public";
+import userStore from "../../mobx/userStore";
 
 const dismissKeyboard = require('dismissKeyboard');
 
@@ -38,11 +39,14 @@ export default class RebuildPassword extends PureComponent {
             .then((data) => {
                 if (data.ok) {
                     tools.showToast("密码修改成功");
-                    this.timer = setTimeout(function () {
-                        Actions.index({type: ActionConst.POP_AND_REPLACE,});
-                    }, 1000);
+                    userStore.login(phone, password, () => {
+                        userStore.fetchLoginUser();
+                    });
+                    // this.timer = setTimeout(function () {
+                    //     Actions.index({type: ActionConst.RESET,});
+                    // }, 1000);
                 } else {
-                    tools.showToast("密码修改成功");
+                    tools.showToast("密码修改失败");
                 }
             })
     }

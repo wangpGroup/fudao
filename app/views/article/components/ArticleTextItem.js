@@ -14,7 +14,6 @@ export default class ArticleTextItem extends Component {
                     <Text style={styles.title}>{article.title}</Text>
                     <Row>
                         <Text style={styles.from}>来自：{article.source}</Text>
-                        <Text style={styles.timeDiff}>{tools.dateFormat(new Date(article.createTime), 'yyyy-MM-dd')}</Text>
                     </Row>
                 </Grid>
             </Item>
@@ -30,7 +29,8 @@ const styles = {
     },
     from: {
         fontSize: 12,
-        color: '#AAAAAA'
+        color: '#AAAAAA',
+        marginTop:10
     },
     timeDiff: {
         fontSize: 12,

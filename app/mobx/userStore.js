@@ -13,13 +13,11 @@ class UserStore {
     @persist @observable token = '';
     @persist @observable lon = 116.391350;
     @persist @observable lat = 39.907723;
-    @observable position = {
-        name: '获取中...',
-        regionId: ''
-    }
     @persist('object') @observable loginUser = {};
     @persist('object') @observable location = {};
-
+    @observable position = {name: '获取中...', regionId: ''}
+    @observable weather = {};
+    @observable PM25 = {};
 
     fieldMap = {
         'personalHistory': 'personal_history',
@@ -29,7 +27,6 @@ class UserStore {
         'mentalState': 'mental_state',
     };
 
-
     @action
     login = async (phone, password, callback) => {
         this.phone = phone;
@@ -38,6 +35,15 @@ class UserStore {
         runInAction(() => {
             this.isLogin = true;
             this.token = token;
+            callback();
+        })
+    };
+    @action
+    otherLogin = (token,callback)=>{
+        runInAction(() => {
+            this.isLogin = true;
+            this.token = token;
+            tools.showToast("登录成功");
             callback();
         })
     };
@@ -52,19 +58,11 @@ class UserStore {
         let loginUser = await this._fetchLoginUser();
         runInAction(() => {
             this.loginUser = loginUser;
-            if (!this.loginUser.sex) {
+            if (!this.loginUser.sex || !this.loginUser.nickname) {
                 Actions.startInformation({phone: this.loginUser.phone, password: this.loginUser.password})
             } else {
-                Actions.index({type: ActionConst.POP_AND_REPLACE,});
+                Actions.index({type: ActionConst.RESET});
             }
-        })
-    };
-    @action
-    fetchLoginUserBase = async () => {
-        let loginUser = await this._fetchLoginUser();
-        runInAction(() => {
-            this.loginUser = loginUser;
-
         })
     };
 
@@ -103,7 +101,6 @@ class UserStore {
             type: 'multipart/form-data',
             name: fileName
         });
-
         request.postJson(urls.apis.IMAGE_UPLOAD, formData)
             .then(result => {
                 if (result.ok) {
@@ -120,7 +117,6 @@ class UserStore {
         let user0 = {...this.loginUser};
         user0[property] = value;
         this.loginUser = user0;
-
         request.getJson(urls.apis.USER_UPDATEUSERINFO, {
             fieldName: this.fieldMap[property] || property,
             value
@@ -177,6 +173,7 @@ class UserStore {
     @action
     logout() {
         this.isLogin = false;
+        this.token = ''
     }
 }
 
@@ -185,5 +182,4 @@ const userStore = new UserStore();
 export default userStore
 hydrate('user', userStore).then(() => {
     userStore.hydrated = true;
-    console.log('user hydrated', userStore)
 });

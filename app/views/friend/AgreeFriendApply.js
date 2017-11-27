@@ -17,7 +17,7 @@ export default class AgreeFriendApply extends PureComponent {
 		let {friend} = props;
 		this.state = {
 			friendRemark: friend.nickname
-		}
+		};
 	}
 
 	render(){
@@ -28,7 +28,7 @@ export default class AgreeFriendApply extends PureComponent {
 				<Header {...this.props} right={
 					<Right>
 						<Button transparent onPress={()=>this._agree()}>
-							<Text>
+							<Text style={{color:'#000'}}>
 								完成
 							</Text>
 						</Button>
@@ -45,38 +45,58 @@ export default class AgreeFriendApply extends PureComponent {
 						</Item>
 					</List>
 					<Separator/>
-					<List style={{padding: 10}}>
-						<Text note>设置朋友圈权限</Text>
-						<ListItem last>
-							<Text>设置朋友圈权限</Text>
-						</ListItem>
-					</List>
+
 				</Content>
 			</Container>
 		);
 	}
 
 	_agree() {
-		let {friend} = this.props;
+		let {friend,from} = this.props;
 		let {friendRemark} = this.state;
 
-		request.getJson(urls.apis.FRIEND_AGREEADDFRIEND, {
-			id: friend.id,
-			friendRemark: friendRemark,
-		}).then(((result) => {
-			if (result.ok) {
-				// 返回上一页
-				Actions.friend();
-				friendStore.fetchMyFriendList()
-				// 刷新新朋友列表, 我的好友列表
-				//this.refreshFriendList();
+		if (!friendRemark){
+			friendRemark = friend.phone
+		}
+		if(from=='userDetail'){
+            request.getJson(urls.apis.FRIEND_UPDATEFRIENDREMARK, {
+                friendId: friend.id,
+                friendRemark: friendRemark,
+            }).then(((result) => {
+                if (result.ok) {
+                    // 返回上一页
+                    Actions.pop({refresh: {change: !this.props.change}});
+                    friendStore.fetchMyFriendList()
+                    // 刷新新朋友列表, 我的好友列表
+                    //this.refreshFriendList();
 
-			} else {
-				toast.show('发送失败，请重试');
-			}
-		}).bind(this), (error) => {
-			alert(JSON.stringify(error));
-		});
+                } else {
+                    toast.show('发送失败，请重试');
+                }
+            }).bind(this), (error) => {
+                alert(JSON.stringify(error));
+            });
+		}else{
+            request.getJson(urls.apis.FRIEND_AGREEADDFRIEND, {
+                id: friend.id,
+                friendRemark: friendRemark,
+            }).then(((result) => {
+                if (result.ok) {
+                    // 返回上一页
+                    Actions.friend();
+                    friendStore.fetchMyFriendList()
+                    // 刷新新朋友列表, 我的好友列表
+                    //this.refreshFriendList();
+
+                } else {
+                    toast.show('发送失败，请重试');
+                }
+            }).bind(this), (error) => {
+                alert(JSON.stringify(error));
+            });
+		}
+
+
 	}
 
 	// 刷新新朋友列表, 我的好友列表

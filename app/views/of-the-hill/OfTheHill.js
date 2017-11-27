@@ -1,68 +1,13 @@
 import React, {Component}  from "react";
-import {View, Image, Text,ScrollView,WebView} from "react-native";
+import {View, Image, Text,ScrollView,WebView,ListView} from "react-native";
 import {observer} from "mobx-react/native";
 import {Container, Content} from "../../components/index";
 import { List, ListItem, Left, Body, Right, Thumbnail,Button,Icon} from 'native-base';
 import {Actions} from "react-native-router-flux";
 import Swiper from "react-native-swiper";
-const listArr=[
-    {
-        imgUrl:require('./image/hill.png'),
-        name:'王小二',
-        noun:'第一名',
-        grade:'99',
-        time:22,
-        praise:false
-    },
-    {
-        imgUrl:require('./image/hill.png'),
-        name:'张三',
-        noun:'第二名',
-        grade:'107',
-        time:34,
-        praise:true
-    },
-    {
-        imgUrl:require('./image/hill.png'),
-        name:'李四',
-        noun:'第3名',
-        grade:'33',
-        time:2,
-        praise:true
-    },
-    {
-        imgUrl:require('./image/hill.png'),
-        name:'李四',
-        noun:'第3名',
-        grade:'33',
-        time:2,
-        praise:false
-    },
-    {
-        imgUrl:require('./image/hill.png'),
-        name:'李四',
-        noun:'第3名',
-        grade:'33',
-        time:2,
-        praise:false
-    },
-    {
-        imgUrl:require('./image/hill.png'),
-        name:'李四',
-        noun:'第3名',
-        grade:'33',
-        time:2,
-        praise:false
-    },
-    {
-        imgUrl:require('./image/hill.png'),
-        name:'李四',
-        noun:'第3名',
-        grade:'33',
-        time:2,
-        praise:true
-    },
-]
+import OfthehillList from "./components/OfthehillList";
+import ofthehillStore from "../../mobx/ofthehillStore";
+import userStore from "../../mobx/userStore";
 
 
 
@@ -72,19 +17,52 @@ const listArr=[
 @observer
 export default class OfTheHill extends Component {
 
+    componentWillMount(){
+        ofthehillStore.fetchUsermine()
+        ofthehillStore.fetfirstchuserList()
+    }
+
+
 
     render() {
+        let {usermineobj,ofhillphoto}=ofthehillStore;
+        let {loginUser}=userStore;
+        let textOf=usermineobj.user_id==ofhillphoto.user_id;
+
+
 
         return (
             <Container>
                 <Content>
+
                     <View style={styles.topView}>
                         <Button transparent style={{position:'absolute',zIndex:1000,top:-1,left:-1}}
                                 onPress={()=>{Actions.pop()}}>
                             <Icon name="arrow-back"/>
                         </Button>
+                        <View style={styles.slide1}>
+                            <View style={{width:260,height:120,position:'absolute',bottom:0}}>
+                                <Image source={require('./image/hill.png')} style={{width:260, height:120}} />
+                                {textOf?null:(
+                                        <Image source={require('./image/line1.png')}  style={{width:50, height:22, position: 'absolute',top:18, left:55}} />
+                                )}
+                                {textOf?null:(
+                                    <View style={{width:100, height:12,position:'absolute', top:-10, left:-10}}>
+                                        <Text>主子,快来替我赎身 我被霸占了</Text>
+                                    </View>
+                                    )}
 
-                        <Swiper style={styles.wrapper}
+                            </View>
+                            <View style={{width:50,height:50,position:'absolute',top:30}}>
+                                <Image source={{uri:urls.getImage(ofhillphoto.photo,100,100)}} style={{width:50,height:50,borderRadius:25}}/>
+                               {/* <Image source={require('./image/line2.png')} style={{width:30,height:15,position:'absolute', top:20, left:47}}/>
+                                <View style={{width:100, height:12,position:'absolute', top:-10, left:72}}>
+                                    <Text>哇哈哈哈 哇哈哈</Text>
+                                </View>*/}
+                            </View>
+                        </View>
+
+                        {/*<Swiper style={styles.wrapper}
                                 showsButtons={false}
                                 paginationStyle={{bottom:10}}
                                 activeDot={(<View style={{backgroundColor:'#000', width: 8, height: 8,borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3,}}
@@ -98,10 +76,10 @@ export default class OfTheHill extends Component {
                                     </View>
                                 </View>
                                 <View style={{width:50,height:50,position:'absolute',top:30}}>
-                                    <Image source={require('./image/himanshu.png')} style={{width:50,height:50,borderRadius:25}}/>
+                                    <Image source={{uri:urls.getImage('default_head/woman_un.png')}} style={{width:50,height:50,borderRadius:25}}/>
                                     <Image source={require('./image/line2.png')} style={{width:30,height:15,position:'absolute', top:20, left:47}}/>
                                     <View style={{width:100, height:12,position:'absolute', top:-10, left:72}}>
-                                        <Text>哇哈哈哈  娃哈哈</Text>
+                                        <Text>{usermineobj.slogan}</Text>
                                     </View>
                                 </View>
                             </View>
@@ -118,11 +96,11 @@ export default class OfTheHill extends Component {
                                     <Image source={require('./image/himanshu.png')} style={{width:50, height:50, borderRadius: 50,}} />
                                     <Image source={require('./image/himanshu.png')} style={{width:50, height:50, borderRadius: 50,}} />
                                 </View>
-                                <View style={{width:200,height:20,marginTop:16}}>
-                                    <Text style={{textAlign:'center',color:'#fff'}}>在此输入占山狂语</Text>
+                                <View style={{width:200,height:20,marginTop:16}} >
+                                    <Text style={{textAlign:'center',color:'#fff'}} onPress={()=>{Actions.setSlogan();}}>在此输入占山狂语</Text>
                                 </View>
                             </View>
-                        </Swiper>
+                        </Swiper>*/}
                     </View>
                     <View style={styles.bottomView}>
                         <ScrollView>
@@ -133,24 +111,31 @@ export default class OfTheHill extends Component {
                                 marginTop:15
                             }}>
                                 <Left>
-                                    <Thumbnail source={require('./image/hill.png')} />
+                                    <Thumbnail source={{uri:urls.getImage(usermineobj.photo,500,500)}} />
                                 </Left>
-                                <Body>
-                                <Text>王朋</Text>
-                                <Text note>第二十二名</Text>
+                                <Body style={{flexDirection:'row',justifyContent:'space-between'}}>
+                                    <View>
+                                        <Text>{usermineobj.nickname?usermineobj.nickname:usermineobj.username}</Text>
+                                        <Text note>第{usermineobj.ranking}名</Text>
+                                    </View>
+                                    <Text style={styles.colorFont}>{usermineobj.score}分</Text>
+
                                 </Body>
-                                <Right >
-                                    <Text style={styles.colorFont}>69分</Text>
-                                </Right>
                                 <Right style={{flexDirection:'column',justifyContent:'center'}}>
-                                    <Text note style={{textAlign:'center',width:20}}>11</Text>
-                                    <Image source={require('./image/heart.png')}
-                                           style={styles.heartImage} >
-                                    </Image>
+
+                                    <Button transparent style={{height:38,flexDirection:'column',justifyContent:'center',width:20,alignItems:'center'}}>
+                                        <Text note style={{textAlign:'center',width:20,marginLeft:20}}>{usermineobj.topraise}</Text>
+                                        {usermineobj.ispraise?(<Image source={require('./image/heart.png')}
+                                                                   style={styles.heartImage} >
+                                        </Image>):<Image source={require('./image/nullheart.png')}
+                                                         style={styles.heartImage} >
+                                        </Image>}
+                                    </Button>
+
                                 </Right>
                             </ListItem>
-
-                            {
+                            <OfthehillList/>
+                            {/*{
                                 listArr.map((k,i)=>(
                                     <ListItem avatar key={i} style={styles.listView}>
                                         <Left>
@@ -175,10 +160,12 @@ export default class OfTheHill extends Component {
                                     </ListItem>
                                 ))
                             }
-
+*/}
 
                         </ScrollView>
                     </View>
+
+
 
 
                 </Content>
@@ -186,6 +173,7 @@ export default class OfTheHill extends Component {
         )
 
     }
+
 
 
 }

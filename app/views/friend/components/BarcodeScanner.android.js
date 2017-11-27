@@ -4,6 +4,7 @@ import {
     StyleSheet,
     Text,
     Vibration,
+    Dimensions,
     View
 } from 'react-native';
 import BarcodeScanner from 'react-native-barcodescanner';
@@ -14,7 +15,7 @@ export default class BarcodeScannerApp extends PureComponent {
     state = {
         barcode: '',
         cameraType: 'back',
-        text: 'Scan Barcode',
+        text: '',
         torchMode: 'off',
         type: '',
     };
@@ -48,7 +49,6 @@ export default class BarcodeScannerApp extends PureComponent {
 
         this.setState({
             barcode: e.data,
-            text: `${e.data} (${e.type})`,
             type: e.type,
         });
     }
@@ -64,7 +64,7 @@ export default class BarcodeScannerApp extends PureComponent {
                     cameraType={this.state.cameraType}
                 />
                 <View style={styles.statusBar}>
-                    <Text style={styles.statusBarText}>{this.state.text}</Text>
+                    <Text style={styles.statusBarText}>扫描二维码添加好友</Text>
                 </View>
             </Container>
         );

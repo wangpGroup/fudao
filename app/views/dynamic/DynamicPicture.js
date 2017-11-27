@@ -1,43 +1,11 @@
 import React, {Component} from "react";
-import {observer} from "mobx-react/native";
-import {StyleSheet, View, Text, ToastAndroid, TouchableHighlight, TouchableOpacity, Image,Platform} from 'react-native'
+import {Platform, Text, View, Image, TouchableOpacity,StatusBar} from "react-native";
 import {Actions} from "react-native-router-flux";
-import Swiper from 'react-native-swiper'
-var images = [];
-var index;
 
-/**
- * 动态
- */
-@observer
+import Swiper from "react-native-swiper";
+
+
 export default class DynamicPicture extends Component {
-    render() {
-        return (
-            <View style={{backgroundColor: '#000'}}>
-                {/*<Swiper*/}
-                {/*style={{flex: 1}}*/}
-                {/*paginationStyle={{bottom: 110}}*/}
-                {/*loop={false}*/}
-                {/*index={this.props.i}*/}
-                {/*dot={<View style={styles.dot}></View>}*/}
-                {/*activeDot={<View style={styles.activeDot}></View>}*/}
-                {/*>*/}
-                {/*{this.props.flag ? this.renderOneImg() : this.renderImg()}*/}
-                {/*</Swiper>*/}
-                <Swiper style={styles.wrapper}
-                        loop={false}
-                        paginationStyle={Platform.OS=='ios'?{}:{bottom: 110}}
-                        dot={<View style={styles.dot}></View>}
-                        index={this.props.i}
-                        activeDot={<View style={styles.activeDot}></View>}
-                >
-                    {/*{this.renderImg()}*/}
-                    {this.props.flag ? this.renderOneImg() : this.renderImg()}
-                </Swiper>
-            </View>
-        )
-    }
-
     renderOneImg() {
         return (
             <Image
@@ -45,7 +13,7 @@ export default class DynamicPicture extends Component {
                 resizeMode={Image.resizeMode.contain}
                 source={{uri: this.props.image}}
             >
-                <TouchableOpacity onPress={Actions.pop} style={{flex: 1}}>
+                <TouchableOpacity onPress={Actions.pop} style={{flex: 1}} activeOpacity={1}>
                 </TouchableOpacity>
             </Image>
         )
@@ -60,7 +28,7 @@ export default class DynamicPicture extends Component {
                     key={i}
                     style={{flex: 1,}}
                     resizeMode={Image.resizeMode.contain}
-                    source={{uri: urls.getImage(images[i], 900, 1220)}}
+                    source={{uri: urls.getImage(images[i])}}
                 >
                     <TouchableOpacity onPress={Actions.pop} style={{flex: 1}}>
                     </TouchableOpacity>
@@ -69,13 +37,37 @@ export default class DynamicPicture extends Component {
         }
         return imageViews;
     }
+
+    render() {
+        let self = this
+        let images = self.props.image.split(',');
+
+        return (
+            <View style={{backgroundColor: '#000', flex: 1, flexDirection: 'column'}}>
+                <StatusBar
+                    animated
+                    hidden
+                />
+                <Swiper
+                    style={styles.wrapper}
+                    loop={false}
+                    paginationStyle={Platform.OS == 'ios' ? {} : {bottom: 110}}
+                    dot={<View style={styles.dot}></View>}
+                    index={this.props.i}
+                    activeDot={<View style={styles.activeDot}></View>}
+
+                >
+                    {this.props.flag ? this.renderOneImg() : this.renderImg()}
+
+
+                </Swiper>
+            </View>
+
+        )
+    }
 }
-
-var styles = StyleSheet.create({
-
-    container: {
-        flexGrow: 1
-    },
+var styles = {
+    wrapper: {},
     dot: {
         width: 8,
         height: 8,
@@ -92,28 +84,5 @@ var styles = StyleSheet.create({
         marginLeft: 3,
         marginRight: 3
     },
+}
 
-})
-
-//
-// const styles = {
-//     container: {
-//         flexGrow: 1
-//     },
-//     dot :{
-//         width: 8,
-//         height: 8,
-//         backgroundColor: 'gray',
-//         borderRadius: 4,
-//         marginLeft: 3,
-//         marginRight: 3
-//     },
-//     activeDot:{
-//         width: 8,
-//         height: 8,
-//         backgroundColor: 'orange',
-//         borderRadius: 4,
-//         marginLeft: 3,
-//         marginRight: 3
-//     }
-// }

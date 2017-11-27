@@ -4,13 +4,13 @@ import {View,Text,Icon} from "native-base";
 
 export default class UserButton extends PureComponent {
     render() {
-        const {style,onPress,text,icon,underline,...rest} = this.props
+        const {style,onPress,text,icon,underline,buttonStyle,...rest} = this.props
         return (
             <View style={[styles.buttonView,style]}>
                 <TouchableOpacity
                     onPress={onPress}
                     activeOpacity={1}
-                    style={styles.button}
+                    style={[styles.button,buttonStyle]}
                 >
                     {icon? <Icon name="ios-phone-portrait-outline" style={{marginRight: 10,color: '#fff'}}/> : null}
                     <Text style={[styles.text,underline ? {textDecorationLine: 'underline'}: null]}>{text}</Text>
@@ -30,9 +30,9 @@ const styles = {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        width: 200,
-        height: 50,
-        borderRadius: 25,
+        width: 186,
+        height: 40,
+        borderRadius: 20,
         backgroundColor: theme.brandPrimary,
     },
     text: {

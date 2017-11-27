@@ -1,6 +1,6 @@
 import React, {PureComponent} from "react";
 import {Alert,ToastAndroid} from "react-native";
-import {Actions} from "react-native-router-flux";
+import {Actions,ActionConst} from "react-native-router-flux";
 import {Container, Content, Header, List, Separator, HeaderButton} from "../../components/index";
 import {Text, Button, ListItem, Item, Input,Right} from "native-base";
 import userStore from "../../mobx/userStore";
@@ -17,8 +17,8 @@ export default class FriendApply extends PureComponent {
 		let {friend} = props;
 
 		this.state = {
-			myIntro: '我叫'+userStore.loginUser.username ,
-			friendRemark: friend.username
+			myIntro: '我叫'+userStore.loginUser.nickname ,
+			friendRemark: friend.nickname
 		}
 	}
 
@@ -31,7 +31,7 @@ export default class FriendApply extends PureComponent {
 				<Header {...this.props} right={
 					<Right>
 						<Button transparent onPress={()=>this._addApplyFriend()}>
-							<Text>
+							<Text style={{color:'#000'}}>
 								发送
 							</Text>
 						</Button>
@@ -56,12 +56,7 @@ export default class FriendApply extends PureComponent {
 						</Item>
 					</List>
 					<Separator/>
-					<List style={{padding: 10}}>
-						<Text note>设置朋友圈权限</Text>
-						<ListItem last>
-							<Text>设置朋友圈权限</Text>
-						</ListItem>
-					</List>
+
 				</Content>
 			</Container>
 		);
@@ -80,10 +75,9 @@ export default class FriendApply extends PureComponent {
 			friendRemark: friendRemark,
 		}).then(((result) => {
 			if (result.ok) {
-				tools.showToast(''+result.obj+'');
-				Actions.friend();
+				Actions.friend({type:ActionConst.POP_TO});
 			} else {
-				tools.showToast('发送申请失败，请重试');
+				tools.showToast("发送申请失败，请重试");
 			}
 		}).bind(this), (error) => {
 			//dispatch(hideLoading());

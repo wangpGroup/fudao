@@ -1,3 +1,6 @@
+import {Dimensions} from "react-native";
+
+
 const styles = {
     indexTitle: {
         color: '#fff',
@@ -9,7 +12,10 @@ const styles = {
     },
     content1: {
         height: 250,
+        width:Dimensions.get('window').width,
         marginBottom: 20,
+        borderBottomWidth:1,
+        borderBottomColor:'#eee'
     },
     bgImg: {
         flex: 1,
@@ -42,7 +48,7 @@ const styles = {
     touxiang: {
         width: 88,
         height: 88,
-        borderRadius: 88,
+        borderRadius: 44,
     },
     dynamic: {
         borderBottomColor: '#E0E0E2',
@@ -55,7 +61,7 @@ const styles = {
 
     time: {
         color: '#7E7E7E',
-        fontSize: 14,
+        fontSize: 12,
     },
     dynamicMessage: {
         position: 'absolute',
@@ -66,16 +72,16 @@ const styles = {
         height: 16,
     },
     timeAndDelete: {
-        marginLeft: 56,
+        marginLeft: 64,
         flexDirection: 'row'
     },
     other: {
         flexDirection: 'row',
     },
     delete: {
-        color: '#5E7192',
+        color: '#786e7f',
         marginLeft: 8,
-        fontSize: 14,
+        fontSize: 12,
     },
     showContain: {
         marginTop: 5,
@@ -103,10 +109,7 @@ const styles = {
         fontSize: theme.DefaultFontSize,
     },
     textInputContain: {
-        paddingTop: 10,
-        paddingBottom: 66,
-        paddingLeft: 10,
-        paddingRight: 10,
+        padding: 10,
         position: 'absolute',
         zIndex: 99,
         bottom: 0,
@@ -124,23 +127,24 @@ const styles = {
     allComments: {
         backgroundColor: '#F3F3F5',
         paddingLeft: 10,
-        marginLeft: 50,
+        marginLeft: 60,
         // paddingBottom:8,
     },
     oneComment: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         justifyContent: 'flex-start',
         marginBottom: 4,
     },
     commentName: {
-        color: '#5E7192',
+        color: '#786e7f',
         lineHeight: 25,
-        fontSize: theme.DefaultFontSize,
+        fontSize: 14,
         marginRight: 6,
     },
     commentContent: {
+        flex:1,
         fontSize: theme.DefaultFontSize,
         lineHeight: 25,
         color: '#060608',
@@ -149,7 +153,7 @@ const styles = {
     allSupports: {
         backgroundColor: '#F3F3F5',
         paddingLeft: 10,
-        marginLeft: 50,
+        marginLeft: 60,
         paddingBottom: 8,
         flexDirection: 'row',
         borderBottomWidth: 0.3,

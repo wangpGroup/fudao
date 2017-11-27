@@ -23,29 +23,33 @@ export default class NewFriend extends Component {
 				<Content gray>
 					<PullView isRefreshing={false} onRefresh={this._onRefresh.bind(this)}>
 						<Separator title="新的朋友"/>
-						<List containerStyle={styles.list}>
-							{NewFriendList.map((f, i) => (
-								<ListItem avatar key={i}>
-									<Left>
-										<Thumbnail style={{width: 50, height: 50}} square
-												   source={{uri:urls.getImage(f.photo, 250, 250)}}/>
-									</Left>
-									<Body>
-									<Text>{f.nickname}</Text>
-									<Text note>{f.introduce}</Text>
-									</Body>
-									<Right style={{justifyContent:'center'}}>
-										{f.status == 1 ?
-											<Button small onPress={() => Actions.agreeFriendApply({friend:f})}>
-												<Text>接受</Text>
-											</Button> :
-											<Text note>已添加</Text>}
-									</Right>
-								</ListItem>
-							))}
-						</List>
+						{
+                            count == 0?<View style={{borderBottomWidth:1,borderBottomColor:'#ccc'}}/>:<List containerStyle={styles.list}>
+                                {NewFriendList.map((f, i) => (
+									<ListItem avatar key={i} style={{borderBottomWidth:0.5,borderBottomColor:'#ccc',paddingBottom:12,paddingTop:8}}>
+										<Left>
+											<Thumbnail style={{width: 50, height: 50}} square
+													   source={{uri:urls.getImage(f.photo, 250, 250)}}/>
+										</Left>
+										<Body>
+										<Text>{f.nickname}</Text>
+										<Text note>{f.introduce}</Text>
+										</Body>
+										<Right style={{justifyContent:'center'}}>
+                                            {f.status == 1 ?
+												<Button small onPress={() => Actions.agreeFriendApply({friend:f})}>
+													<Text>接受</Text>
+												</Button> :
+												<Text note>已添加</Text>}
+										</Right>
+									</ListItem>
+                                ))}
+							</List>
+						}
+
+
 						<View style={{alignItems:'center', padding:15}}>
-							<Text>{count == 0 ? '没有新好友' : count + '位新好友'}</Text>
+							<Text>{count == 0 ? '暂时没有新朋友哦~~' : count + '位新好友'}</Text>
 						</View>
 					</PullView>
 				</Content>
@@ -54,6 +58,7 @@ export default class NewFriend extends Component {
 	}
 
 	componentDidMount() {
+        friendStore.changeMyFriendApplyToready()
 		friendStore.fetchNewFriendList()
 
 	}
@@ -76,6 +81,9 @@ const styles = {
 	icon: {
 		fontSize: 24,
 		color: '#FFFFFF'
+	},
+	pad15:{
+
 	}
 }
 
