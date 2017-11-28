@@ -28,7 +28,7 @@ export default class DynamicCommonDetail extends Component {
                             style={styles.dynamicName}>{info.user.friendremark ||p.user.nickname||info.user.phone || "用户" + JSON.stringify(info.user.id).substr(1, 4)}</Text>
                         <View style={styles.dynamicContain}>
                             <Text style={styles.dynamicContent}>{info.content}</Text>
-                            {info.type==2?(<DynamicImage imagePath={info.path}/>):null}
+                            {info.type==2||info.type==6?(<DynamicImage imagePath={info.path}/>):null}
                             {info.type==3||info.type==4||info.type==5?(<NewShare id={info.path} type={info.type} from="list"/>):null}
 
                         </View>

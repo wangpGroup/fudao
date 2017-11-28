@@ -2,6 +2,7 @@ import {action, computed, observable, reaction, runInAction} from "mobx";
 import {ActionConst, Actions} from "react-native-router-flux";
 import {persist} from "mobx-persist";
 import hydrate from "../common/hydrate";
+import JPushModule from "jpush-react-native";
 var Geolocation = require('Geolocation');
 
 
@@ -87,6 +88,8 @@ class UserStore {
             request.getJson(urls.apis.USER_GETLOGINUSER)
                 .then((data) => {
                     if (data.ok) {
+                        JPushModule.setAlias(data.obj.id, () => {})
+                        // alert(JSON.stringify(data))
                         resolve(data.obj);
                     }
                 });

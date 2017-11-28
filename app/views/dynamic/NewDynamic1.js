@@ -30,7 +30,7 @@ export default class NewDynamic extends Component {
 
     render() {
         let {right, imgList, imgUpload, changeImg, videoPath} = dynamicStore;
-        let {type,id} = this.props;
+        let {leixing,id} = this.props;
 
         return (
             <Container>
@@ -51,16 +51,17 @@ export default class NewDynamic extends Component {
                             this.setState({text: text})
                         }}
                         text={this.state.text}/>
-                    {!type ? <NewPicture
+                    {!leixing ? <NewPicture
                         changeImg={changeImg}
                         videoPath={videoPath}
                         imgArr={imgList}
                         imgUpload={imgUpload}
                         addImage={this.addImage.bind(this)}
+                        // delVideo={this.delVideo.bind(this)}
                         delImage={this.delImage.bind(this)}/> : null}
-                    {type ? (
+                    {leixing ? (
                         <View style={styles.containerView}>
-                            <NewShare id={id} type={type}/>
+                            <NewShare id={id} type={leixing}/>
                         </View>
                     ): null}
 
@@ -77,7 +78,14 @@ export default class NewDynamic extends Component {
     }
 
     addImage() {
-        this.dialog.show("请选择", selectedArr, '#333333', this.callbackSelected.bind(this));
+        let {imgList} = dynamicStore;
+        if(imgList.length>0){
+            this.dialog.show("请选择", ['拍照','从手机相册选择'], '#333333', this.callbackSelectedPic.bind(this));
+
+        }else{
+            this.dialog.show("请选择", selectedArr, '#333333', this.callbackSelected.bind(this));
+        }
+
     }
 
     callbackSelected(i) {
@@ -99,21 +107,31 @@ export default class NewDynamic extends Component {
             case 0: // 拍照
                 this.takePhoto();
                 break;
-            case 1: // 图库
+            case 1: // 视频
                 Actions.cameraVideo();
                 break;
-            // case 2: // 图库
-
         }
     }
 
     callbackSelectedBefore(i) {
         switch (i) {
-            case 0: // 拍照
+            case 0: // 从手机相册选择相片
                 this.pickPhoto();
                 break;
-            case 1: // 图库
+            case 1: // 从手机相册选择视频
                 this.pickVideo();
+                break;
+
+        }
+    }
+
+    callbackSelectedPic(i) {
+        switch (i) {
+            case 0: // 拍照
+                this.takePhoto();
+                break;
+            case 1: // 从手机相册选择相片
+                this.pickPhoto();
                 break;
 
         }
@@ -145,11 +163,7 @@ export default class NewDynamic extends Component {
             waitAnimationEnd: false,
             mediaType: 'video'
         }).then(images => {
-            // dynamicStore.uploadImg(images,true
             dynamicStore.refreshNewVideo(images.path)
-            // this.setState({
-            //     text: JSON.stringify(images)
-            // })
 
         }).catch(e => alert(e));
     }
@@ -165,14 +179,24 @@ export default class NewDynamic extends Component {
         ])
     }
 
+    delVideo(i) {
+        Alert.alert('', '确定删除视频吗?', [
+            {text: '取消'},
+            {
+                text: '删除',
+                onPress: () => dynamicStore.delVideo()
+            }
+        ])
+    }
+
     send() {
         let {text} = this.state;
-        let {type,id} =this.props;
-        if (text || dynamicStore.imgList.length > 0 || dynamicStore.videoPath || type) {
-            if (!type) {
+        let {leixing,id} =this.props;
+        if (text || dynamicStore.imgList.length > 0 || dynamicStore.videoPath || leixing) {
+            if (!leixing) {
                 dynamicStore.addNewDynamic(text)
             } else {
-                dynamicStore.addNewDynamic(text, type, id)
+                dynamicStore.addNewDynamic(text, leixing, id)
             }
         } else {
             Alert.alert('', '内容不能为空~~', [{text: '确定'}])

@@ -52,7 +52,7 @@ export default class GroupMotion extends Component {
     _renderRowView(rowData,index,aaa) {
 
         return (
-            <ListItem avatar style={styles.listItem} onPress={() => {Actions.groupActionRepositorydetails({id:rowData.id})}}>
+            <ListItem avatar style={styles.listItem} onPress={() => Actions.groupActionRepositorydetails({id:rowData.id})}>
                 <Left>
                     <View style={styles.leftView}>
                         <Image source={require('../image/play.png')}
@@ -81,18 +81,25 @@ export default class GroupMotion extends Component {
                 </Body>
                 <Right style={{flexDirection: 'column', justifyContent: 'center',borderColor:'transparent'}}>
                     <View
-                        style={[styles.circleView, {backgroundColor: '#cccccc'}]}>
-                        <Text style={{fontSize:10}}>已打卡</Text>
+                        style={[styles.circleView, {backgroundColor: rowData.isread ? '#cccccc' : '#726585'}]}>
+                        {rowData.isread ? (<Text style={{fontSize:10}}>已打卡</Text>) : (<Text style={{color: '#fff',fontSize:10}}>打卡</Text>)}
                     </View>
                 </Right>
 
-                <Image source={require('../image/yipay.png')} style={{
+                {rowData.is_free == 1 && rowData.ispay==false? (<Image source={require('../image/daler.png')} style={{
                     width: 14,
                     height: 14,
                     position: 'absolute',
                     right: 0,
                     top: 0
-                }}/>
+                }}/>) : (null)}
+                {rowData.ispay==true? (<Image source={require('../image/yipay.png')} style={{
+                    width: 14,
+                    height: 14,
+                    position: 'absolute',
+                    right: 0,
+                    top: 0
+                }}/>) : (null)}
             </ListItem>
         )
     }

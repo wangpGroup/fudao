@@ -48,7 +48,7 @@ export default class DiscoverList extends PureComponent {
         if(item.is_free==1&&item.ispay!=true){
           this._PayModal_zt.show(item);
         }else{
-           Actions.activity({title:item.theme_name,themeId:item.id})
+           Actions.themeActivity({title:item.theme_name,themeId:item.id})
         }
 
     }

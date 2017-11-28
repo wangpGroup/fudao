@@ -3,6 +3,7 @@ import {Modal, View, Image, ListView,Dimensions} from "react-native";
 import {Icon,Button, ListItem, Text,Switch,CheckBox,Body} from "native-base";
 import {observer} from "mobx-react/native";
 import activityStore from "../../../mobx/activityStore";
+import activityClassifyStore from "../../../mobx/activityStore";
 import {Container, Header, Content, WebView} from "../../../components";
 const time=[{index:1,name:'周一'},
     {index:2,name:'周二'},
@@ -34,7 +35,8 @@ export default class OrderModal extends Component {
                 {index:4,name:'周五',sta:false},
                 {index:5,name:'周六',sta:false},
                 {index:6,name:'周日',sta:false},],
-            time:{shi:'0',fen:'0'}
+            time:{shi:'0',fen:'0'},
+            id:''
         }
     }
 
@@ -113,10 +115,34 @@ export default class OrderModal extends Component {
         )
     }
     finish(){
-        alert(JSON.stringify(this.state.time));
+
+        let shi=parseInt(this.state.time.shi)+1
+        let fen=this.state.time.fen*5;
+        if(fen<10){
+            fen='0'+fen;
+        }
+        let time=shi+':'+fen;
+        let arr=[];
+        this.state.week.map((i)=>{
+            if(i.sta){
+                arr.push(i.index+1);
+            }
+        })
+        let str=arr.join(',');
+        request.getJson(urls.apis.PUSHMYSUBSCRIBE,{id:this.state.id,pushTime:time,pushDay:str})
+        .then((result) => {
+            if (result.ok) {
+                tools.showToast("添加成功！")
+                this.hide();
+
+
+            } else {
+                tools.showToast("请求出错！")
+            }
+        });
     }
     accept(data){
-        alert(data);
+
         let arr=data.split('+')
         let state=this.state;
         if(arr[0]==0){
@@ -142,13 +168,15 @@ export default class OrderModal extends Component {
      * 打开对话框
      * @param data
      */
-    show(data,zu) {
+    show(id) {
         let state = {
             visible: true,
-            text: data,
-            zu:zu
+            id: id,
+
         };
         this.setState(state);
+
+
 
     }
 

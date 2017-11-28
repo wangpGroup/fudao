@@ -9,10 +9,16 @@ import Parabola from 'react-native-smart-parabola'
 import CircleProgress from '../consult/components/CircleProgress'
 import VideoPlayer from './components/VideoPlayer'
 import DetailsModal from "./components/DetailsModal";
+import OrderModal from "./components/OrderModal";
+import PayModalBox from "./components/PayModalBox";
 
 import activityClassifyStore from "../../mobx/activityClassifyStore";
 
 import userStore from "../../mobx/userStore";
+import ShareAlertDialog from "../article/components/AlertShare";
+import * as WeChat from 'react-native-wechat';
+import * as QQAPI from 'react-native-qq';
+import * as WeiboAPI from 'react-native-weibo';
 
 let {width: deviceWidth, height: deviceHeight} = Dimensions.get('window')
 let contentTop = Platform.OS == 'ios' ? 64 : 56
@@ -23,10 +29,120 @@ let duan = Platform.OS == 'ios'
  */
 @observer
 export default class ThemeActivity extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            showSharePop: false,//分享弹窗，默认不显示
+        }
+
+    }
 
     componentWillMount(){
         let {themeId} = this.props;
         activityClassifyStore.getThemeActivityList(themeId);
+    }
+
+
+    wxShare() {
+
+        let {activityGroup}=activityClassifyStore;
+        WeChat.isWXAppInstalled()
+        .then((isInstalled) => {
+            if (isInstalled) {
+
+                WeChat.shareToSession({
+                    title:activityGroup.group_name,
+                    description: '分享自:活动',
+                    thumbImage:'',
+                    type: 'news',
+                    webpageUrl: urls.pages.ZH_ACTIONSHARE + '?id=' + activityGroup.id
+                })
+                .catch((error) => {
+                    alert(error.message);
+                });
+            } else {
+                tools.showToast('没有安装微信软件，请您安装微信之后再试');
+            }
+        });
+        this.setState({showSharePop: false})
+
+
+
+    }
+    wxpyqShare(){
+
+
+        let {activityGroup}=activityClassifyStore;
+        WeChat.isWXAppInstalled()
+        .then((isInstalled) => {
+            if (isInstalled) {
+                WeChat.shareToTimeline({
+                    title:activityGroup.group_name,
+                    description: '分享自:活动',
+                    thumbImage: '',
+                    type: 'news',
+                    webpageUrl: urls.pages.ZH_ACTIONSHARE + '?id=' + activityGroup.id,
+                }).then(res => {
+                    //alert(res)
+
+                    //tools.showToast("微信朋友圈")
+                })
+            } else {
+                tools.showToast("没有安装微信软件，请您安装微信之后再试");
+            }
+        });
+        this.setState({showSharePop: false})
+    }
+    qqShare() {
+        let {activityGroup}=activityClassifyStore;
+        QQAPI.shareToQQ({
+                type: 'news',
+                title:activityGroup.group_name,
+                description: '分享自:活动',
+                webpageUrl: urls.pages.ZH_ACTIONSHARE + '?id=' + activityGroup.id,
+                imageUrl:''
+            }
+        );
+        this.setState({showSharePop: false})
+
+    }
+    qqkjShare() {
+        let {activityGroup}=activityClassifyStore;
+        QQAPI.shareToQzone({
+                type: 'news',
+                title:activityGroup.group_name,
+                description: '分享自:活动',
+                webpageUrl: urls.pages.ZH_ACTIONSHARE + '?id=' + activityGroup.id,
+                imageUrl:''
+            }
+        );
+        this.setState({showSharePop: false})
+
+    }
+    wbShare() {
+        let {activityGroup}=activityClassifyStore;
+        WeiboAPI.share({
+            type: 'image',
+            text: '快来看看我分享的内容吧'+urls.pages.ZH_ACTIONSHARE + '?id=' + activityGroup.id,
+            imageUrl:  '',
+        });
+        this.setState({showSharePop: false})
+    }
+    haoyouShare() {
+        this.setState({showSharePop: false})
+
+    }
+    qzShare() {
+        let {grouplistId}=activityClassifyStore;
+        Actions.newDynamic({
+            leixing: 5,
+            id:grouplistId
+        })
+        this.setState({showSharePop: false})
+    }
+    onSharePress() {
+        this.setState({showSharePop: !this.state.showSharePop})
     }
 
     render() {
@@ -138,11 +254,23 @@ export default class ThemeActivity extends Component {
                                         }}>
                                     <Image source={require('./image/jingyin.png')} style={{width: 36, height: 36}}/>
                                 </Button>
+                                <Button transparent
+                                        onPress={() => this.onSharePress()}
+                                        style={{
+                                            width: 36,
+                                            height: 36,
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            marginTop:10
+                                        }}>
+
+                                    <Image source={require('../../assets/share.png')} style={{width: 36, height: 36}}/>
+                                </Button>
                             </View>
 
                         </View>
                         {themeActivityList.map((i,k)=>(
-                                <ListItem avatar style={styles.listItem} key={k} onPress={()=>{this.changeList(i.id)}}>
+                                <ListItem avatar style={styles.listItem} key={k} onPress={()=>{this.changeList(i.id,i.is_free)}}>
                                     <Left>
                                         <View style={styles.leftView}>
                                             <Image source={require('./image/play.png')}
@@ -171,18 +299,25 @@ export default class ThemeActivity extends Component {
                                     </Body>
                                     <Right style={{flexDirection: 'column', justifyContent: 'center',borderColor:'transparent'}}>
                                         <View
-                                            style={[styles.circleView, {backgroundColor: '#cccccc'}]}>
-                                            <Text style={{fontSize:10}}>已打卡</Text>
+                                            style={[styles.circleView, {backgroundColor: i.isread ? '#cccccc' : '#726585'}]}>
+                                            {i.isread ? (<Text style={{fontSize:10}}>已打卡</Text>) : (<Text style={{color: '#fff',fontSize:10}}>打卡</Text>)}
                                         </View>
                                     </Right>
 
-                                    <Image source={require('./image/yipay.png')} style={{
+                                    {i.is_free == 1 && i.ispay==false? (<Image source={require('./image/daler.png')} style={{
                                         width: 14,
                                         height: 14,
                                         position: 'absolute',
                                         right: 0,
                                         top: 0
-                                    }}/>
+                                    }}/>) : (null)}
+                                    {i.ispay==true? (<Image source={require('./image/yipay.png')} style={{
+                                        width: 14,
+                                        height: 14,
+                                        position: 'absolute',
+                                        right: 0,
+                                        top: 0
+                                    }}/>) : (null)}
                                 </ListItem>
                             )
 
@@ -195,14 +330,34 @@ export default class ThemeActivity extends Component {
 
                 </Content>
                 <DetailsModal ref={(e) => this._PayModal = e}  />
+                <OrderModal ref={(e) => this._OrderModal = e}/>
+                <PayModalBox ref={(e) => this._PayModalBox = e} onChangeMsg={this.postMsg.bind(this)}/>
+                <ShareAlertDialog show={this.state.showSharePop} closeModal={(show) => {
+                    this.setState({showSharePop: show})
+                }}  wxShare = {this.wxShare.bind(this)}  wxpyqShare = {this.wxpyqShare.bind(this)} qqShare = {this.qqShare.bind(this)}
+                                  qqkjShare = {this.qqkjShare.bind(this)} wbShare = {this.wbShare.bind(this)} haoyouShare={this.haoyouShare.bind(this)} qzShare = {this.qzShare.bind(this)} {...this.props}/>
 
             </Container>
         )
 
     }
-    changeList(id){
-        activityClassifyStore.themelistId=id;
+    postMsg(){
+        let {themeId} = this.props;
+        activityClassifyStore.getThemeActivityList(themeId);
+    }
+    openPayBox(){
+        let {themelistId}=activityClassifyStore;
+        this._PayModalBox.show(themelistId);
+    }
+    changeList(id,free){
+
         this.refs.list.scrollTo([0, 0]);
+        if(free==1){
+            this.openPayBox(id);
+        }else{
+            activityClassifyStore.themelistId=id;
+            activityClassifyStore.getOneActtivityGroup(id);
+        }
     }
     openDetailsBox() {
         let {themelistId}=activityClassifyStore;
@@ -210,11 +365,12 @@ export default class ThemeActivity extends Component {
 
     }
     openOrderBox(){
-        let {themelistId}=activityClassifyStore
-        activityClassifyStore.addMySubscribe(1,themelistId)
+        let {themelistId}=activityClassifyStore;
+        activityClassifyStore.addMySubscribe(1,themelistId,this._OrderModal.show.bind(this._OrderModal))
         activityClassifyStore.fetchActivityClassifyList(1);
 
     }
+
 
 
 

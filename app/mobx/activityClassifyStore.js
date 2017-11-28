@@ -16,6 +16,9 @@ class ActivityClassifyStore {
     @observable themelistId = '';
     @observable page = '';
     @observable videoPath = '';
+    @observable subscribeId = '';
+    @observable themeGroup = '';
+
 
 
 
@@ -157,26 +160,32 @@ class ActivityClassifyStore {
 
 
     @action
-    addMySubscribe(typeId,sourceId){
+    addMySubscribe(typeId,sourceId,callback){
 
         if(typeId==1){
             request.getJson(urls.apis.ADDMYSUBSCRIBE,{type:typeId,sourceId:sourceId})
             .then((result) => {
                 if (result.ok) {
                     tools.showToast("订制成功！")
+                    this.subscribeId=result.obj.id;
+                    callback(result.obj.id);
+
 
                 } else {
-                    tools.showToast("请求出错！")
+                    tools.showToast(result.message);
                 }
             });
         }else{
             request.getJson(urls.apis.ADDMYSUBSCRIBE,{type:typeId,sourceId:sourceId})
             .then((result) => {
                 if (result.ok) {
-                    tools.showToast("订制成功！")
+                    tools.showToast("订制成功！");
+                    this.subscribeId=result.obj.id;
+                    callback(result.obj.id);
+
 
                 } else {
-                    tools.showToast("请求出错！")
+                    tools.showToast(result.message)
                 }
             });
         }
@@ -199,10 +208,10 @@ class ActivityClassifyStore {
     @action
     getOneActtivity(id){
 
-
         request.getJson(urls.apis.GETONEACTTIVITY,{actId:id})
         .then((result) => {
             if (result.ok) {
+                // alert(JSON.stringify(result.obj.activity))
                 this.activityDetails=result.obj.activity;
 
             } else {
@@ -231,6 +240,7 @@ class ActivityClassifyStore {
             if (result.ok) {
                 this.themeActivityList = result.obj.activityList;
                 this.themelistId = result.obj.activityList[0].id;
+                this.activityGroup=result.obj.activityList[0];
             } else {
                 tools.showToast("请求出错！")
             }

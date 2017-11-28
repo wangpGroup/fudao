@@ -39,7 +39,7 @@ export default class Discover extends Component {
             Traffic:false,
             Home:false,
             Else:false,
-            Diseases:false
+            Disease:false
         }
 
 
@@ -68,7 +68,7 @@ export default class Discover extends Component {
                         <Icon style={[styles.icon, {color: '#6a6d79'}]} name='ios-home-outline'/>
                         <Text style={{fontSize: 12, color: '#6a6d79'}}>家</Text>
                     </View>
-                    <View style={this.state.Diseases?styles.tabItem1:styles.tabItem} onStartShouldSetResponder={this._clickTab.bind(this,'Diseases')}>
+                    <View style={this.state.Disease?styles.tabItem1:styles.tabItem} onStartShouldSetResponder={this._clickTab.bind(this,'Disease')}>
                         <Icon style={[styles.icon, {color: '#6a6d79'}]} name='ios-briefcase-outline'/>
                         <Text style={{fontSize: 12, color: '#6a6d79'}}>常见病</Text>
                     </View>
@@ -92,7 +92,7 @@ export default class Discover extends Component {
                 Traffic:false,
                 Home:false,
                 Else:false,
-                Diseases:false
+                Disease:false
             });
             this._requst('work')
 
@@ -103,7 +103,7 @@ export default class Discover extends Component {
                 Traffic:true,
                 Home:false,
                 Else:false,
-                Diseases:false
+                Disease:false
             });
             this._requst('traffic');
 
@@ -113,7 +113,7 @@ export default class Discover extends Component {
                 Traffic:false,
                 Home:true,
                 Else:false,
-                Diseases:false
+                Disease:false
             });
             this._requst('home')
 
@@ -124,7 +124,7 @@ export default class Discover extends Component {
                 Traffic:false,
                 Home:false,
                 Else:true,
-                Diseases:false
+                Disease:false
             });
             this._requst('other');
 
@@ -135,9 +135,9 @@ export default class Discover extends Component {
                 Traffic:false,
                 Home:false,
                 Else:false,
-                Diseases:true
+                Disease:true
             });
-            this._requst('diseases');
+            this._requst('disease');
 
 
         }

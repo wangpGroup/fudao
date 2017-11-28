@@ -329,15 +329,19 @@ class DynamicStore {
     }
 
     @action
-    addNewDynamic(text,type,id) {
-        if(!type){
+    addNewDynamic(text, type, id) {
+        if (!type) {
             var type = 1;
             var pic = '';
-            if (this.imgList.length > 0||this.videoPath) {
+            if (this.imgList.length > 0 || this.videoPath) {
                 pic = this.imgUpload.join(',');
-                type = 2;
+                if(this.videoPath){
+                    type=6;
+                }else{
+                    type = 2;
+                }
             }
-        }else{
+        } else {
             var pic = id;
         }
         this.newnew = !this.newnew;
@@ -347,9 +351,9 @@ class DynamicStore {
             path: pic,
             type: type
         }).then((res) => {
-            if(!type){
+            if (!type) {
                 Actions.pop({refresh: {newnew: this.newnew}})
-            }else{
+            } else {
                 Actions.pop({refresh: {newnew: this.newnew}})
 
             }
@@ -369,7 +373,6 @@ class DynamicStore {
             formData.append("filename", file);
             request.postJson(urls.apis.IMAGE_UPLOAD, formData)
                 .then(result => {
-                    tools.showToast(JSON.stringify(result))
                     if (result.ok) {
                         this.right = '发表';
                         this.imgUpload.push(result.obj);
@@ -384,7 +387,7 @@ class DynamicStore {
         } else {
             let image_len = image.length;
             let formData = new FormData();
-            for(let i=0;i<image_len;i++){
+            for (let i = 0; i < image_len; i++) {
                 this.imgList.push({uri: image[i].path, width: image[i].width, height: image[i].height});
                 let file = {uri: image[i].path, type: 'multipart/form-data', name: 'a.jpg'};
                 formData.append("filename", file);
@@ -419,8 +422,16 @@ class DynamicStore {
     }
 
     @action
+    delVideo() {
+        this.videoPath = '';
+        this.imgUpload.splice(0, 1);
+        Actions.pop();
+    }
+
+    @action
     dynamicDetail(info) {
         this.info = info;
+
     }
 
 
@@ -487,8 +498,7 @@ class DynamicStore {
 
     @action
     refreshNewVideo(videoPath) {
-        this.videoPath=videoPath;
-        // tools.showToast(this.videoPath);
+        this.videoPath = videoPath;
         this.right = '上传中';
         let formData = new FormData();
         formData.append("filename", {
@@ -496,12 +506,11 @@ class DynamicStore {
             type: 'multipart/form-data',
             name: 'a.mp4'
         });
-        request.postJson(urls.apis.IMAGE_UPLOAD, formData)
+        request.postJson(urls.apis.IMAGE_UPLOADVIDEO, formData)
             .then(result => {
                 if (result.ok) {
                     this.right = '发表';
                     this.imgUpload.push(result.obj);
-                    tools.showToast(JSON.stringify(this.imgUpload))
                 } else {
                     tools.showToast("上传失败")
                 }
@@ -510,12 +519,11 @@ class DynamicStore {
     }
 
 
-
     @action
     clearImgList() {
         this.imgList = [];
         this.imgUpload = [];
-        this.videoPath='';
+        this.videoPath = '';
     }
 
     @action

@@ -7,6 +7,7 @@ import {Container, Content} from "../../../components/index";
 import {List, ListItem, Left, Body, Right, Thumbnail, Button, Icon, Header} from 'native-base';
 import PayModal from "./PayModal";
 import OrderModal from "./OrderModal";
+import PayModalBox from "./PayModalBox";
 import { SwipeListView ,SwipeRow} from 'react-native-swipe-list-view';
 
 import CircleProgress from '../../consult/components/CircleProgress';
@@ -45,6 +46,7 @@ export default class GroupMotion extends Component {
         }
     }
 
+
     render() {
         let {groupActivityList,activityGroup,videoPath}=activityClassifyStore;
 
@@ -54,7 +56,7 @@ export default class GroupMotion extends Component {
 
         return (
             <ScrollView ref="list">
-                <View style={{width:'100%',height:300,backgroundColor:'#fff',marginBottom:10,alignItems:'center'}}>
+                <View style={{width:'100%',height:320,backgroundColor:'#fff',marginBottom:10,alignItems:'center'}}>
                     <View style={{width:'100%',height:240}}>
                         <VideoPlayer
                             source={{uri: urls.apis.VIDEONEW + '?filePath=/video/activity/dianroutaiyang.mp4'}}
@@ -73,16 +75,17 @@ export default class GroupMotion extends Component {
 
                         />
                     </View>
-                    <View style={{width:200,height:60,flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
+                    <View style={{width:200,height:60,flexDirection:'row',alignItems:'center',justifyContent:'center',marginTop:10,marginBottom:10}}>
                         <View style={{width:60,height:60,borderWidth:2,borderColor:'#a198ae',justifyContent:'center',alignItems:'center',marginRight:6}}>
-                            <Image source={require('../image/dingzhi.png')} style={{width: 50, height: 50}}/>
+                            <Image source={require('../image/dongzuo.png')} style={{width: 40, height: 40}}/>
                         </View>
                         <View style={{width:56,height:56,borderWidth:1,borderColor:'#e6e6e6',justifyContent:'center',alignItems:'center',marginRight:6}}>
-                            <Image source={require('../image/dingzhi.png')} style={{width: 50, height: 50}}/>
+                            <Image source={require('../image/dongzuo.png')} style={{width: 40, height: 40}}/>
                         </View>
                         <View style={{width:56,height:56,borderWidth:1,borderColor:'#e6e6e6',justifyContent:'center',alignItems:'center',marginRight:6}}>
-                            <Image source={require('../image/dingzhi.png')} style={{width: 50, height: 50}}/>
+                            <Image source={require('../image/dongzuo.png')} style={{width: 40, height: 40}}/>
                         </View>
+
                     </View>
 
                     <View style={{width:40,height:200,flexDirection:'column',position:'absolute',right:20,top:20}}>
@@ -105,7 +108,7 @@ export default class GroupMotion extends Component {
                                     alignItems: 'center',
                                     marginTop:20
                                 }}>
-                            <Image source={require('../image/dingzhi.png')} style={{width: 36, height: 35}}/>
+                            <Image source={require('../image/dingzhi.png')} style={{width: 30, height: 30}}/>
                         </Button>
                         <Button transparent
                                 onPress={()=>{
@@ -118,7 +121,7 @@ export default class GroupMotion extends Component {
                                     alignItems: 'center',
                                     marginTop:10
                                 }}>
-                            <Image source={require('../image/zhushi.png')} style={{width: 36, height: 36}}/>
+                            <Image source={require('../image/zhushi.png')} style={{width: 30, height: 30}}/>
                         </Button>
                         <Button transparent
                                 style={{
@@ -128,8 +131,9 @@ export default class GroupMotion extends Component {
                                     alignItems: 'center',
                                     marginTop:10
                                 }}>
-                            <Image source={require('../image/jingyin.png')} style={{width: 36, height: 36}}/>
+                            <Image source={require('../image/jingyin.png')} style={{width: 30, height: 30}}/>
                         </Button>
+
                     </View>
 
 
@@ -146,10 +150,6 @@ export default class GroupMotion extends Component {
                     ref="hill"
 
                 />
-
-
-
-
 
 
 
@@ -186,18 +186,25 @@ export default class GroupMotion extends Component {
                             </Body>
                             <Right style={{flexDirection: 'column', justifyContent: 'center',borderColor:'transparent'}}>
                                 <View
-                                    style={[styles.circleView, {backgroundColor: '#cccccc'}]}>
-                                    <Text style={{fontSize:10}}>已打卡</Text>
+                                    style={[styles.circleView, {backgroundColor: i.isread ? '#cccccc' : '#726585'}]}>
+                                    {i.isread ? (<Text style={{fontSize:10}}>已打卡</Text>) : (<Text style={{color: '#fff',fontSize:10}}>打卡</Text>)}
                                 </View>
                             </Right>
 
-                            <Image source={require('../image/yipay.png')} style={{
+                            {i.is_free == 1 && i.ispay==false? (<Image source={require('../image/daler.png')} style={{
                                 width: 14,
                                 height: 14,
                                 position: 'absolute',
                                 right: 0,
                                 top: 0
-                            }}/>
+                            }}/>) : (null)}
+                            {i.ispay==true? (<Image source={require('../image/yipay.png')} style={{
+                                width: 14,
+                                height: 14,
+                                position: 'absolute',
+                                right: 0,
+                                top: 0
+                            }}/>) : (null)}
                         </ListItem>
                     )
 
@@ -205,7 +212,7 @@ export default class GroupMotion extends Component {
 
 
 
-
+                <PayModalBox ref={(e) => this._PayModalBox = e} onChangeMsg={this.postMsg.bind(this)}/>
                 <PayModal ref={(e) => this._PayModal = e}  />
                 <OrderModal ref={(e) => this._OrderModal = e}/>
 
@@ -235,7 +242,7 @@ export default class GroupMotion extends Component {
                 </TouchableOpacity>
             </View>
             <View>
-                <ListItem avatar style={styles.listItem} onPress={() => {}}>
+                <ListItem avatar style={styles.listItem} onPress={() => {this.changeListb(rowData.id,rowData.subscribeid,rowData.is_free)}}>
                     <Left>
                         <View style={styles.leftView}>
                             <Image source={require('../image/play.png')}
@@ -260,22 +267,30 @@ export default class GroupMotion extends Component {
                         <Text style={{fontSize: 16, color: '#000'}}>{rowData.group_name}</Text>
                         <Text style={{fontSize: 12,marginLeft:10,color:'#666'}}>123</Text>
                     </View>
-                    <Text style={{fontSize: 8}}>功效很重要，没有脖子不得了</Text>
+                    <Text style={{fontSize: 8}}>{rowData.effect}</Text>
                     </Body>
                     <Right style={{flexDirection: 'column', justifyContent: 'center',borderColor:'transparent'}}>
                         <View
-                            style={[styles.circleView, {backgroundColor: '#cccccc'}]}>
-                            <Text style={{fontSize:10}}>已打卡</Text>
+                            style={[styles.circleView, {backgroundColor: rowData.isread ? '#cccccc' : '#726585'}]}>
+                            {rowData.isread ? (<Text style={{fontSize:10}}>已打卡</Text>) : (<Text style={{color: '#fff',fontSize:10}}>打卡</Text>)}
                         </View>
                     </Right>
-
-                    <Image source={require('../image/yipay.png')} style={{
+                    {rowData.is_free == 1 && rowData.ispay==false? (<Image source={require('../image/daler.png')} style={{
                         width: 14,
                         height: 14,
                         position: 'absolute',
                         right: 0,
                         top: 0
-                    }}/>
+                    }}/>) : (null)}
+                    {rowData.ispay==true? (<Image source={require('../image/yipay.png')} style={{
+                        width: 14,
+                        height: 14,
+                        position: 'absolute',
+                        right: 0,
+                        top: 0
+                    }}/>) : (null)}
+
+
                 </ListItem>
             </View>
         </SwipeRow>
@@ -298,7 +313,27 @@ export default class GroupMotion extends Component {
     }
     changeList(id){
         activityClassifyStore.grouplistId=id;
+        activityClassifyStore.getOneActtivityGroup(id);
         this.refs.list.scrollTo([0, 0]);
+    }
+    changeListb(id,subscribeid,isfree){
+
+
+        this.refs.list.scrollTo([0, 0]);
+        if(isfree==1){
+            this.openPayBox(id);
+        }else{
+            activityClassifyStore.grouplistId=id;
+            activityClassifyStore.getOneActtivityGroup(id);
+            activityClassifyStore.subscribeId=subscribeid;
+        }
+    }
+    postMsg(){
+        activityStore.fetchRefreshSubscribeActivityList(1,1,this.refs.hill._postRefresh);
+    }
+    openPayBox(){
+        let {grouplistId}=activityClassifyStore;
+        this._PayModalBox.show(grouplistId);
     }
     openDetailsBox() {
         let {grouplistId}=activityClassifyStore;
@@ -307,9 +342,10 @@ export default class GroupMotion extends Component {
     }
     openOrderBox(){
         let {grouplistId}=activityClassifyStore
-        activityClassifyStore.addMySubscribe(1,grouplistId)
+        activityClassifyStore.addMySubscribe(1,grouplistId,this._OrderModal.show.bind(this._OrderModal));
         activityClassifyStore.fetchActivityClassifyList(1);
-        this._OrderModal.show();
+
+
 
     }
 }

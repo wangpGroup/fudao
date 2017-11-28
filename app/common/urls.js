@@ -26,7 +26,7 @@
 // const webPath = 'http://192.168.3.213:3000/'; // cxx
 // const webPath = 'http://192.168.3.184:3000/'; // cxx
 //const webPath = 'http://103.254.113.10:8088/web/';
-const webPath = 'http://192.168.3.204:8080/';
+const webPath = 'http://103.254.113.10:8081/web/';
 //const webPath = 'http://192.168.10.165:8088/web/'
 
 
@@ -103,6 +103,7 @@ const urls = {
         VIDEONEW:'http://103.254.113.10:9099/videoapi/getVideo',
         VIDEO: apiPath + 'ImgApi/getVideo',
         IMAGE_UPLOAD: apiPath + 'ImgApi/upload',
+        IMAGE_UPLOADVIDEO: apiPath + 'ImgApi/uploadVideo',
         //获取今日推荐的活动
         GETRECOMMENDACTIVITYLIST: apiPath +'ActivityApi/getRecommendActivityList',
         //用户添加组合运动/局部运动等到我的定制。
@@ -125,6 +126,8 @@ const urls = {
         GETSEARCHACTIVITYLIST:apiPath +'ActivityApi/getSearchActivityList',
         //获取个人订阅的活动。
         GETSUBSCRIBEACTIVITYLIST: apiPath +'ActivityApi/getSubscribeActivityList',
+        //用户我的定制到推送。
+        PUSHMYSUBSCRIBE: apiPath +'SubscribeApi/pushMySubscribe',
 
 
 

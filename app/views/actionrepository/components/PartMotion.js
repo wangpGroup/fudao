@@ -168,18 +168,12 @@ export default class PartMotion extends Component {
                 </Body>
                 <Right style={{flexDirection: 'column', justifyContent: 'center',borderColor:'transparent'}}>
                     <View
-                        style={[styles.circleView, {backgroundColor: '#cccccc'}]}>
-                        <Text style={{fontSize:10}}>已打卡</Text>
+                        style={[styles.circleView, {backgroundColor: rowData.isread ? '#cccccc' : '#726585'}]}>
+                        {rowData.isread ? (<Text style={{fontSize:10}}>已打卡</Text>) : (<Text style={{color: '#fff',fontSize:10}}>打卡</Text>)}
                     </View>
                 </Right>
 
-                <Image source={require('../image/yipay.png')} style={{
-                    width: 14,
-                    height: 14,
-                    position: 'absolute',
-                    right: 0,
-                    top: 0
-                }}/>
+
             </ListItem>
         )
     }

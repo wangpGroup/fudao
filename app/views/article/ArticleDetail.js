@@ -58,6 +58,7 @@ export default class ArticleDetail extends PureComponent {
 					tools.showToast('没有安装微信软件，请您安装微信之后再试');
 				}
 			});
+		this.setState({showSharePop: false})
 
 
 
@@ -85,6 +86,7 @@ export default class ArticleDetail extends PureComponent {
 					tools.showToast("没有安装微信软件，请您安装微信之后再试");
 				}
 			});
+		this.setState({showSharePop: false})
 	}
 
 	qqShare() {
@@ -96,7 +98,8 @@ export default class ArticleDetail extends PureComponent {
 				webpageUrl: urls.pages.ARTICLE_GETSHAREARTICLE + '?id=' + this.props.articleId,
 				imageUrl:this.thumbImage
 			}
-		)
+		);
+		this.setState({showSharePop: false})
 
 	}
 	qqkjShare() {
@@ -108,29 +111,30 @@ export default class ArticleDetail extends PureComponent {
 				webpageUrl: urls.pages.ARTICLE_GETSHAREARTICLE + '?id=' + this.props.articleId,
 				imageUrl:this.thumbImage
 			}
-		)
+		);
+		this.setState({showSharePop: false})
 
 	}
 	wbShare() {
 		let data=this.data;
 		WeiboAPI.share({
-			type: 'link',
-			url: urls.pages.ARTICLE_GETSHAREARTICLE + '?id=' + this.props.articleId,
-			imageUrl: this.thumbImage,
-			title: data.title
-		})
+			type: 'image',
+			text: '快来看看我分享的内容吧'+urls.pages.ARTICLE_GETSHAREARTICLE + '?id=' + this.props.articleId,
+			imageUrl:  this.thumbImage,
+		});
+		this.setState({showSharePop: false})
 	}
 	haoyouShare() {
-		alert('好友')
+		this.setState({showSharePop: false})
 
 	}
 	qzShare() {
 		Actions.newDynamic({
-			type: 3,
-			id:this.props.articleId
-		})
-
-	}
+            leixing: 3,
+            id:this.props.articleId
+        })
+        this.setState({showSharePop: false})
+    }
 	onSharePress() {
 		this.setState({showSharePop: !this.state.showSharePop})
 	}

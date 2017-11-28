@@ -1,7 +1,9 @@
 import React, {Component} from "react";
-import {Modal, View, Image, ListView,WebView,Dimensions} from "react-native";
+import {Modal, View, Image, ListView,WebView,Dimensions,ScrollView} from "react-native";
 import {Icon,Button, ListItem, Text} from "native-base";
 import {observer} from "mobx-react/native";
+import activityClassifyStore from "../../../mobx/activityClassifyStore";
+import Layout from "./Layout"
 
 
 /**
@@ -18,7 +20,7 @@ class PayModal extends Component {
             ...props,
             visible: false,
             text:'{"imgPath":"zixun/1.3.jpg","title":"点一支薰衣草窗前明月光的休息一下吧~","content":"以两手搓热环摸脐周，谁知盘中餐，少用力按摩腹部提拿腹肌，以一手会当临绝顶，一览众山小"}',
-            zu:{}
+            num:1
         }
     }
 
@@ -31,6 +33,13 @@ class PayModal extends Component {
 
     render() {
         let {visible} = this.state;
+        let {activityDetails,activityGroup}=activityClassifyStore
+        let activityObj={};
+        if(this.state.num==1){
+            activityObj=activityGroup;
+        }else{
+            activityObj=activityDetails;
+        }
 
         return (
             <Modal
@@ -41,6 +50,7 @@ class PayModal extends Component {
                 onLayout={({nativeEvent:e})=>this.layout(e)}
             >
                 <View style={styles.opacityView}/>
+
                 <View style={styles.content}>
                     <View style={styles.header}>
 
@@ -52,68 +62,16 @@ class PayModal extends Component {
                             </Button>
                         </View>
                     </View>
-                    <View style={{width:'100%',height:80,borderBottomWidth:1,borderBottomColor:'#cecece',justifyContent:'center',alignItems:'center'}}>
-                        <Text style={{fontSize:16}}>
-                            工位减脂操———手部操说明
-                        </Text>
 
-                    </View>
-                    <View style={{height:64,backgroundColor:'#eeeeee',flexDirection:'row',marginTop:15}}>
-                        <View style={{width:56,height:56,borderWidth:1,borderColor:'#ccc',margin:4}}>
-                            <Image source={require('../image/play.png')}
-                                   style={{width: 56, height: 56}}/>
-                        </View>
-
-                        <Text style={{lineHeight:45}}>
-                            按压手腕两侧
-                        </Text>
+                    <Layout activity={activityObj} num={this.state.num}/>
 
 
-
-                    </View>
-                    <View style={{flexDirection: 'row', marginTop: 20, }}>
-                        <View style={{width: '15%',paddingTop:4}}>
-                            <Text style={{textAlign: 'right',fontSize:12}}>
-                                原理：
-                            </Text>
-                        </View>
-
-                        <View style={{width: '85%'}}>
-                            <Text style={{lineHeight: 20,fontSize:12}}>
-                                手部运动能帮助我们更好的放松肌肉，恢复手部运动动力
-                            </Text>
-                        </View>
-                    </View>
-                    <View style={{flexDirection: 'row', marginTop: 20, }}>
-                        <View style={{width: '15%',paddingTop:4}}>
-                            <Text style={{textAlign: 'right',fontSize:12}}>
-                                方法：
-                            </Text>
-                        </View>
-
-                        <View style={{width: '85%'}}>
-                            <Text style={{lineHeight: 20,fontSize:12}}>
-                                手部运动能帮助我们更好的放松肌肉，恢复手部运动动力
-                            </Text>
-                        </View>
-                    </View>
-                    <View style={{flexDirection: 'row', marginTop: 20,}}>
-                        <View style={{width: '15%',paddingTop:4}}>
-                            <Text style={{textAlign: 'right',fontSize:12}}>
-                                注意：
-                            </Text>
-                        </View>
-
-                        <View style={{width: '85%'}}>
-                            <Text style={{lineHeight: 20,fontSize:12}}>
-                                手部运动能帮助我们更好的放松肌肉，恢复手部运动动力
-                            </Text>
-                        </View>
-                    </View>
 
 
 
                 </View>
+
+
 
 
             </Modal>
@@ -126,11 +84,19 @@ class PayModal extends Component {
      * 打开对话框
      * @param data
      */
-    show(data,zu) {
+    show(id,num) {
+        if(num==1){
+            activityClassifyStore.getOneActtivityGroup(id)
+        }
+        if(num==2){
+            activityClassifyStore.getOneActtivity(id)
+        }
+
+
         let state = {
             visible: true,
-            text: data,
-            zu:zu
+            num: num,
+
         };
         this.setState(state);
 
@@ -143,6 +109,8 @@ class PayModal extends Component {
         this.setState({
             visible: false
         })
+        activityClassifyStore.activityDetails='';
+        activityClassifyStore.activityGroup=''
     }
 
 

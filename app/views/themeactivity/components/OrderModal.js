@@ -135,7 +135,6 @@ export default class OrderModal extends Component {
                 tools.showToast("添加成功！")
                 this.hide();
 
-
             } else {
                 tools.showToast("请求出错！")
             }
@@ -169,7 +168,6 @@ export default class OrderModal extends Component {
      * @param data
      */
     show(id) {
-
         let state = {
             visible: true,
             id: id,

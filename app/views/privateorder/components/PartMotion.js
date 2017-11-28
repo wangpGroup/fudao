@@ -82,7 +82,7 @@ export default class PartMotion extends Component {
                                     alignItems: 'center',
                                     marginTop:20
                                 }}>
-                            <Image source={require('../image/dingzhi.png')} style={{width: 36, height: 35}}/>
+                            <Image source={require('../image/dingzhi.png')} style={{width: 30, height: 30}}/>
                         </Button>
                         <Button transparent
                                 onPress={()=>{
@@ -95,7 +95,7 @@ export default class PartMotion extends Component {
                                     alignItems: 'center',
                                     marginTop:10
                                 }}>
-                            <Image source={require('../image/zhushi.png')} style={{width: 36, height: 36}}/>
+                            <Image source={require('../image/zhushi.png')} style={{width: 30, height: 30}}/>
                         </Button>
                         <Button transparent
                                 style={{
@@ -105,7 +105,7 @@ export default class PartMotion extends Component {
                                     alignItems: 'center',
                                     marginTop:10
                                 }}>
-                            <Image source={require('../image/jingyin.png')} style={{width: 36, height: 36}}/>
+                            <Image source={require('../image/jingyin.png')} style={{width: 30, height: 30}}/>
                         </Button>
                     </View>
 
@@ -153,22 +153,16 @@ export default class PartMotion extends Component {
                             <Text style={{fontSize: 16, color: '#000'}}>{i.name}</Text>
                             <Text style={{fontSize: 12,marginLeft:10,color:'#666'}}>123</Text>
                         </View>
-                        <Text style={{fontSize: 8}}>功效很重要，没有脖子不得了</Text>
+                        <Text style={{fontSize: 8}}>{i.effect}</Text>
                         </Body>
                         <Right style={{flexDirection: 'column', justifyContent: 'center',borderColor:'transparent'}}>
                             <View
-                                style={[styles.circleView, {backgroundColor: '#cccccc'}]}>
-                                <Text style={{fontSize:10}}>已打卡</Text>
+                                style={[styles.circleView, {backgroundColor: i.isread ? '#cccccc' : '#726585'}]}>
+                                {i.isread ? (<Text style={{fontSize:10}}>已打卡</Text>) : (<Text style={{color: '#fff',fontSize:10}}>打卡</Text>)}
                             </View>
                         </Right>
 
-                        <Image source={require('../image/yipay.png')} style={{
-                            width: 14,
-                            height: 14,
-                            position: 'absolute',
-                            right: 0,
-                            top: 0
-                        }}/>
+
                     </ListItem>
                     )
 
@@ -205,7 +199,7 @@ export default class PartMotion extends Component {
                     </TouchableOpacity>
                 </View>
                 <View>
-                    <ListItem avatar style={styles.listItem} onPress={() => {}}>
+                    <ListItem avatar style={styles.listItem} onPress={() => {this.changeListb(rowData.id,rowData.subscribeid,rowData.is_free)}}>
                         <Left>
                             <View style={styles.leftView}>
                                 <Image source={require('../image/play.png')}
@@ -227,25 +221,19 @@ export default class PartMotion extends Component {
                                 backgroundColor: '#d2d2d2',
                                 marginRight: 10
                             }}>123</Text>
-                            <Text style={{fontSize: 16, color: '#000'}}>{rowData.group_name}</Text>
+                            <Text style={{fontSize: 16, color: '#000'}}>{rowData.name}</Text>
                             <Text style={{fontSize: 12,marginLeft:10,color:'#666'}}>123</Text>
                         </View>
-                        <Text style={{fontSize: 8}}>功效很重要，没有脖子不得了</Text>
+                        <Text style={{fontSize: 8}}>{rowData.effect}</Text>
                         </Body>
                         <Right style={{flexDirection: 'column', justifyContent: 'center',borderColor:'transparent'}}>
                             <View
-                                style={[styles.circleView, {backgroundColor: '#cccccc'}]}>
-                                <Text style={{fontSize:10}}>已打卡</Text>
+                                style={[styles.circleView, {backgroundColor: rowData.isread ? '#cccccc' : '#726585'}]}>
+                                {rowData.isread ? (<Text style={{fontSize:10}}>已打卡</Text>) : (<Text style={{color: '#fff',fontSize:10}}>打卡</Text>)}
                             </View>
                         </Right>
 
-                        <Image source={require('../image/yipay.png')} style={{
-                            width: 14,
-                            height: 14,
-                            position: 'absolute',
-                            right: 0,
-                            top: 0
-                        }}/>
+
                     </ListItem>
                 </View>
             </SwipeRow>
@@ -270,6 +258,18 @@ export default class PartMotion extends Component {
         activityClassifyStore.partlistId=id;
         this.refs.list.scrollTo([0, 0]);
     }
+    changeListb(id,subscribeid,isfree){
+
+
+        this.refs.list.scrollTo([0, 0]);
+        if(isfree==1){
+            this.openPayBox(id);
+        }else{
+            activityClassifyStore.partlistId=id;
+            activityClassifyStore.getOneActtivity(id);
+            activityClassifyStore.subscribeId=subscribeid;
+        }
+    }
     openDetailsBox() {
 
         let {partlistId}=activityClassifyStore;
@@ -277,9 +277,10 @@ export default class PartMotion extends Component {
 
     }
     openOrderBox(){
-        let {partlistId}=activityClassifyStore
-        activityClassifyStore.addMySubscribe(2,partlistId)
+        let {partlistId}=activityClassifyStore;
+        activityClassifyStore.addMySubscribe(2,partlistId,this._OrderModal.show.bind(this._OrderModal))
         activityClassifyStore.fetchActivityClassifyList(2);
+
 
     }
 }

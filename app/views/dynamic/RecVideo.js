@@ -28,7 +28,7 @@ export default class RecVideo extends React.Component {
                 />
                 <Video source={{uri: data.path}}
                        style={styles.backgroundVideo}
-                       rate={1} volume={1} muted={true}
+                       rate={1} volume={1} muted={false}
                        resizeMode="cover" repeat={true} key="video1"/>
 
                 <View style={[styles.overlay, styles.bottomOverlay]}>

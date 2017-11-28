@@ -11,7 +11,7 @@ class SubTabBar extends Component {
     }
 
     renderTabOption(tab, i) {
-        let backgroundColor = this.props.activeTab == i ?  '#BEC4DA':"#fff" ;
+        let backgroundColor = this.props.activeTab == i ?  '#ffffeb':"#f0f3f8" ;
         return (
             <TouchableOpacity
                 key={i}
